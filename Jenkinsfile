@@ -45,10 +45,10 @@ pipeline {
                         script {
                           if (env.BRANCH_NAME == "test" ) {
                             sh 'ssh -o StrictHostKeyChecking=no -l root 10.0.200.131 \
-                            "cd /home/env/api.vndmscontent; bash -s" < ./scripts/deploy-dev.sh $BUILD_NUMBER $BRANCH_NAME'
+                            "cd /data/env/apideannangcaonhanthuc; bash -s" < ./scripts/deploy-dev.sh $BUILD_NUMBER $BRANCH_NAME'
                           } else {
                             sh 'ssh -o StrictHostKeyChecking=no -l root 10.0.200.131 \
-                            "cd /home/env/api.vndmscontent; bash -s" < ./scripts/deploy-dev.sh $BUILD_NUMBER'
+                            "cd /data/env/apideannangcaonhanthuc; bash -s" < ./scripts/deploy-dev.sh $BUILD_NUMBER'
                           }
                         }
                     }
@@ -74,7 +74,7 @@ pipeline {
                 script {
                     sshagent(['123.30.208.20']) {
                         sh 'ssh -o StrictHostKeyChecking=no -l root 123.30.208.20 \
-                        "cd /home/env/api.vndmscontent; bash -s" < ./scripts/deploy-prod.sh $BUILD_NUMBER'
+                        "cd /data/envproduction/apideannangcaonhanthuc; bash -s" < ./scripts/deploy-prod.sh $BUILD_NUMBER'
                     }
                 }
             }
