@@ -3,9 +3,9 @@
 set -euo pipefail
 
 BUILD_NUMBER=$1
-DOCKER_IMAGE=10.0.200.107:5000/vndms-content-api-prod:"$BUILD_NUMBER"
-ENV_FILE=/home/env/api.vndmscontent/.env.production
-CONTAINER_NAME=vndms-content-api-prod
+DOCKER_IMAGE=docker.vgasoft.vn/deannangcaonhanthuc-api-prod:"$BUILD_NUMBER"
+ENV_FILE=/home/env/apideannangcaonhanthuc/.env.production
+CONTAINER_NAME=deannangcaonhanthuc-api-prod
 
 if [ ! -f "$ENV_FILE" ]; then
   echo "$ENV_FILE does not existed. Exit."
