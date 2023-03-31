@@ -1,0 +1,20 @@
+export default {
+    'api.explorers.id': 'ID dữ liệu viễn thám',
+    'api.explorers.explorerName': 'Tên dữ liệu viễn thám',
+    'api.explorers.disastersId': 'ID sự kiện thiên tai',
+    'api.explorers.explorerGroupsId': 'Id loại dữ liệu viễn thám',
+    'api.explorers.explorerImage': 'Ảnh đại diện dữ liệu viễn thám',
+    'api.explorers.explorerSatelliteImages': 'Ảnh vệ tinh dữ liệu viễn thám',
+    'api.explorers.explorerFiles': 'File dữ liệu dữ liệu viễn thám',
+    'api.explorers.explorerVideos': 'Video dữ liệu viễn thám',
+    'api.explorers.NWCornerLat': 'Kinh độ tây bắc - Dữ liệu viễn thám',
+    'api.explorers.NWCornerLong': 'Vĩ độ tây bắc - Dữ liệu viễn thám',
+    'api.explorers.NECornerLat': 'Kinh độ Đông bắc - Dữ liệu viễn thám',
+    'api.explorers.NECornerLong': 'Vĩ độ Đông bắc - Dữ liệu viễn thám',
+    'api.explorers.SECornerLat': 'Kinh độ Đông nam - Dữ liệu viễn thám',
+    'api.explorers.SECornerLong': 'Vĩ độ Đông name - Dữ liệu viễn thám',
+    'api.explorers.SWCornerLat': 'Kinh độ tây nam - Dữ liệu viễn thám',
+    'api.explorers.SWCornerLong': 'Vĩ độ tây name - Dữ liệu viễn thám',
+    'api.explorers.explorerDescriptions': 'Mô tả chi tiết dữ liệu viễn thám',
+    'api.explorers.explorerSources': 'Nguồn dữ liệu viễn thám'
+  }

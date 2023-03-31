@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!--    <script src=" https://socketdev.nhathuocgpp.com.vn/socket.io/socket.io.js"></script>-->
+  <!-- <script src="https://socket.vgasoft.vn/socket.io/socket.io.js"></script> -->
+  <!-- <script src="http://localhost:5551/socket.io/socket.io.js"></script> -->
+
+  <script src="https://socket.vgasoft.vn/socket.io/socket.io.js"></script>
+  <title>test  socket.io</title>
+</head>
+
+<body>
+  <h1>test socket.io</h1>
+  <script>
+
+    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiYWRtaW5hZG1pbiIsInVzZXJJZCI6IjEiLCJpYXQiOjE2MTU4ODcxNDAsImV4cCI6MTYxNTk3MzU0MH0.AGQnmMTv0zex3dalOQiC-iStL7I2Kchil11weDeypK4";
+    //   const socket = io.connect(`localhost:5551?token=${token}`,{
+    //     reconnectionDelayMax: 1000,
+    //     reconnectionDelay:1000,
+    //     reconnection: true,
+    // });
+    // const socket = io.connect(`http://localhost:5551?token=${token}`, {
+      const socket = io.connect(`https://socket.vgasoft.vn?token=${token}`, {
+      reconnectionDelayMax: 1000,
+      reconnectionDelay: 1000,
+      reconnection: true,
+    });
+
+    socket.on('connect', () => {
+      console.log("socket client====", socket.id);
+      // socket.on('messages', function(data) {
+      //   console.log('messages data: ', data);
+      // });
+
+      // ĐÓN NHẬN NOTIFY : CHAT ban đầu kết nối, và khi có thay đổi
+      socket.on('notifications', function (data) {
+        console.log('notifications data: ', data);
+      });
+      // ĐÓN NHẬN NOTIFY : khi đọc tin nhắn
+      socket.on('success', function (data) {
+        console.log('success data: ', data);
+      });
+      socket.on('errors', function (data) {
+        console.log('errors data: ', data);
+      });
+      socket.on('sendMessageSuccesFully', function (data) {
+        console.log('sendMessageSuccesFully data: ', data);
+      });
+
+
+      socket.on('receiveGetRoomsOfUsers', function (data) {
+        console.log('getRoomsOfUsers data: ', data);
+      });
+      socket.on('receiveListMessage', function (data) {
+        console.log('receiveListMessage data: ', data);
+      });
+      socket.on('viewedNotifications', function (data) {
+        console.log('viewedNotifications data: ', data);
+      });
+
+      socket.on('offlineNotify', function (data) {
+        console.log('offlineNotify data: ', data);
+      });
+
+      socket.on('onlineNotify', function (data) {
+        console.log('onlineNotify data: ', data);
+      });
+
+      socket.on('mailDetail', function (data) {
+        console.log('mailDetail data: ', data);
+      });
+      socket.on('inboxMail', function (data) {
+        console.log('inboxMail data: ', data);
+      });
+      socket.on('outboxMail', function (data) {
+        console.log('outboxMail data: ', data);
+      });
+      socket.on('outboxMail', function (data) {
+        console.log('outboxMail data: ', data);
+      });
+      socket.on('sendMailSuccesFully', function (data) {
+        console.log('sendMailSuccesFully data: ', data);
+      });
+      socket.on('nhanThu', function (data) {
+        console.log('nhanThu data: ', data);
+      });
+       socket.on('removeMailNotify', function (data) {
+        console.log('removeMailNotify data: ', data);
+      });
+       socket.on('mailsOfRoom', function (data) {
+        console.log('mailsOfRoom data: ', data);
+      });
+
+      socket.on('receiveMessage', function (data) {
+        console.log('receiveMessage data: ', data);
+      });
+    });
+  // socket.emit('joinRoom', {placeId:'196'});
+  // socket.emit('getPlaceMessages', {placeId:'196'});
+  //      https://socketdev.nhathuocgpp.com.vn localhost:5551
+  // https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js
+  // https://socketdev.nhathuocgpp.com.vn/socket.io/socket.io.js
+  </script>
+</body>
+
+</html>
