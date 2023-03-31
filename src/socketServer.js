@@ -1,16 +1,9 @@
-import r, { row } from 'rethinkdb';
-import ValidateJoi, { noArguments } from './utils/validateJoi';
-import CONFIG from './config';
-import _, { functions } from 'lodash';
-import socketService from './services/socketService';
-import jwt from 'jsonwebtoken';
 import moment from 'moment';
-import MapObject from 'rethinkdb';
+
 import models from './entity/index';
 import Model from './models/models';
-
-const { addUser, removeUser, getUser, getListUser } = require('./services/socket/userOnline');
-const tz = 'ASIA/Ho_Chi_Minh';
+import _ from 'lodash';
+import CONFIG from './config';
 
 const {
   sequelize,
@@ -186,7 +179,7 @@ io.on('connection', socket => {
       roomChatsType,
       type,
       replyId,
-      roomChatsName,
+
       addUsersId,
       removeUsersId,
       newRoomChatsName
@@ -401,7 +394,7 @@ io.on('connection', socket => {
           chatMessagesReply: chatMessagesReply
         }
       };
-      console.log('a7', messageDetail);
+
       // gửi tin nhắn dên những người nhận trong nhóm , trừ socket gửi
       if (Number(type) === 1) {
         if (removeUsersId && removeUsersId.length > 0) {
@@ -749,7 +742,7 @@ io.on('connection', socket => {
       //  người dùng gửi tin nhắn
       //  data :
       console.log('sendMessages', data);
-      const { tranId, listUsers, toUsersId, roomChatsName } = data;
+      const { listUsers, roomChatsName } = data;
 
       // console.log('roomChatsId', roomChatsId);
 
@@ -1079,6 +1072,7 @@ io.on('connection', socket => {
         ),
         Model.findOne(roomMails, { where: { id: roomMailsId } })
       ]);
+
       console.log('callresultRoomMails', callresultRoomMails);
       const rowsMail = Object.values(callresultRoomMails[0]);
       const countMail = callresultRoomMails[2][0]['@out_rowCount'];
@@ -1163,6 +1157,7 @@ io.on('connection', socket => {
         });
         const row = allMailNhan[0];
         const mailall = Object.values(row);
+
         console.log('mailall', mailall);
         if (mailall.length === 0) deleteAll = true;
       } else {
@@ -1358,6 +1353,7 @@ io.on('connection', socket => {
         );
         const row = allMailNhan[0];
         const mailsNhan = Object.values(row);
+
         console.log('mailsNhan', mailsNhan);
 
         Promise.all(
@@ -1400,7 +1396,7 @@ io.on('connection', socket => {
   });
   //   socket.emit("downloadMail",{"roomMailsId":1,"usersId":2,"mailsId":3})
   socket.on('downloadMail', async function(data) {
-    const { mailsId, roomMailsId, usersId } = data;
+    const { mailsId, usersId } = data;
 
     try {
       //  người dùng gửi tin nhắn

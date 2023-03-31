@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import ValidateJoi, { noArguments } from '../utils/validateJoi';
 import viMessage from '../locales/vi';
 import regexPattern from '../utils/regexPattern';
@@ -46,6 +47,10 @@ const DEFAULT_SCHEMA = {
     number: noArguments,
     label: viMessage['api.users.id']
   }),
+  newGroupsId: ValidateJoi.createSchemaProp({
+    number: noArguments,
+    label: viMessage['api.newGroups.id']
+  }),
   userApprovedId: ValidateJoi.createSchemaProp({
     number: noArguments,
     label: viMessage['api.users.id'],
@@ -83,6 +88,7 @@ const DEFAULT_SCHEMA = {
     label: 'nếu true thì nghĩa là bài báo này không hợp lệ khi quét báo => đánh dấu lại để tăng độ thông minh của AI'
   })
 };
+
 const DEFAULT_SCHEMA_disastersNews = ValidateJoi.createArraySchema(
   ValidateJoi.createObjectSchema({
     id: ValidateJoi.createSchemaProp({
@@ -122,7 +128,8 @@ export default {
       newspapersId,
       status,
       type,
-      typeOfNewsListId
+      typeOfNewsListId,
+      newGroupsId
     } = req.body;
     const news = {
       newsTitle,
@@ -139,13 +146,20 @@ export default {
       newspapersId,
       status,
       type,
-      typeOfNewsListId
+      typeOfNewsListId,
+      newGroupsId
     };
 
     const SCHEMA = Object.assign(
       ValidateJoi.assignSchema(DEFAULT_SCHEMA, {
         newsTitle: {
           max: 500,
+          required: noArguments
+        },
+        newGroupsId: {
+          required: noArguments
+        },
+        newsDescription: {
           required: noArguments
         },
         newsShortDescription: {
@@ -184,7 +198,8 @@ export default {
       manualUpdate,
       typeOfNewsListId,
       status,
-      type
+      type,
+      newGroupsId
     } = req.body;
     const news = {
       newsTitle,
@@ -201,7 +216,8 @@ export default {
       disastersNews,
       typeOfNewsListId,
       status,
-      type
+      type,
+      newGroupsId
     };
 
     const SCHEMA = Object.assign(
@@ -230,16 +246,12 @@ export default {
   authenUpdate_status: (req, res, next) => {
     // console.log("validate authenCreate")
 
-    const { status, invalid } = req.body;
+    const { status } = req.body;
 
-    const dateUpdated = req.body.dateUpdated || new Date();
-    const userGroup = { status, dateUpdated, invalid };
+    const userGroup = { status };
 
     const SCHEMA = ValidateJoi.assignSchema(DEFAULT_SCHEMA, {
       status: {
-        required: noArguments
-      },
-      dateUpdated: {
         required: noArguments
       }
     });
@@ -253,7 +265,7 @@ export default {
   },
   authenFilter: (req, res, next) => {
     const { filter, sort, range, attributes } = req.query;
-    console.log('validate authenFilter', filter);
+
     if (sort && JSON.parse(sort.toString())) {
       if (JSON.parse(sort)[0].includes('.')) {
         res.locals.sort = [[...JSON.parse(sort)[0].split('.'), JSON.parse(sort)[1]]];
@@ -264,6 +276,7 @@ export default {
     if (filter) {
       const {
         id,
+        newGroupsId,
         newsTitle,
         newsShortDescription,
         newsAuthor,
@@ -286,6 +299,7 @@ export default {
       const news = {
         id,
         newsTitle,
+        newGroupsId,
         newsShortDescription,
         newsAuthor,
         url,

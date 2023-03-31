@@ -134,8 +134,12 @@ import botTypeOfPosts from './vi-Vn/botTypeOfPosts';
 import botTypeOfTrackedObject from './vi-Vn/botTypeOfTrackedObject';
 import contentSocialsStatistic from './vi-Vn/contentSocialsStatistic';
 import newKindOfDisaster from './vi-Vn/newKindOfDisaster';
+import newGroups from './vi-Vn/newGroups';
+
 export default {
   // thông tin chung//
+  userCreatorsId: 'Id nguoi tao',
+
   page: 'Trang hiện tại',
   perPage: 'Tổng dữ trên trang',
   isDelete: 'Trạng thái xóa',
@@ -564,5 +568,6 @@ export default {
   ...botTypeOfPosts,
   ...botTypeOfTrackedObject,
   ...contentSocialsStatistic,
-  ...newKindOfDisaster
+  ...newKindOfDisaster,
+  ...newGroups
 };

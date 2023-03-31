@@ -14,7 +14,6 @@ import youtubeService from './youtubeService';
 import zaloServices from './zalo/index';
 import { publishContentFacebook } from './facebook/publishContent';
 import { publishContentZalo } from './zalo/publishContent';
-import { Model } from 'mongoose';
 import number from 'joi/lib/types/number';
 import fbGetStatistics from './facebook/getStatistics';
 import updateFbPost from './facebook/updatePost';

@@ -54,7 +54,8 @@ export default models => {
     chatMessages,
     mailsUsers,
     roomMails,
-    newKindOfDisaster
+    newKindOfDisaster,
+    newGroups
   } = models;
 
   // Users.hasMany(Roles, { foreignKey: 'UserId', as: 'RoleDetails' })
@@ -500,5 +501,14 @@ export default models => {
   newKindOfDisaster.belongsTo(users, {
     foreignKey: 'userCreatorsId',
     as: 'userCreators'
+  });
+
+  newGroups.belongsTo(users, {
+    foreignKey: 'userCreatorsId',
+    as: 'userCreators'
+  });
+  news.belongsTo(newGroups, {
+    foreignKey: 'newGroupsId',
+    as: 'newGroups'
   });
 };
