@@ -16,7 +16,7 @@ import tokenSerivce from './tokenSerivce';
 import preCheckHelpers, { TYPE_CHECK } from '../helpers/preCheckHelpers';
 import viMessage from '../locales/vi';
 
-const { sequelize, Op, users,  userGroups ,provinces} = models;
+const { sequelize, Op, users, userGroups, provinces } = models;
 
 export default {
   get_list: async param => {
@@ -36,12 +36,16 @@ export default {
         throw error;
       }
 
-      whereFilter = await filterHelpers.makeStringFilterRelatively(['username', 'fullname', 'email', 'mobile', 'address'], whereFilter, 'users');
+      whereFilter = await filterHelpers.makeStringFilterRelatively(
+        ['username', 'fullname', 'email', 'mobile'],
+        whereFilter,
+        'users'
+      );
 
       console.log('whereFilter: ', whereFilter);
 
       const result = await Promise.all([
-        MODELS.findAndCountAll(users,{
+        MODELS.findAndCountAll(users, {
           // subQuery: false,
           where: whereFilter,
           order: sort,
@@ -50,11 +54,10 @@ export default {
           attributes: att,
           distinct: true,
           include: [
-            { model: userGroups, as: 'userGroups', required: true , attributes:['id','userGroupName']},
-            { model: provinces, as: 'provinces', required: false, attributes:['id','provinceName'] },
-
+            { model: userGroups, as: 'userGroups', required: true, attributes: ['id', 'userGroupName'] },
+            { model: provinces, as: 'provinces', required: false, attributes: ['id', 'provinceName'] }
           ]
-        }),
+        })
       ]).catch(error => {
         ErrorHelpers.errorThrow(error, 'getListError', 'UserServices');
       });
@@ -82,29 +85,25 @@ export default {
       const { id, auth } = param;
       const whereFilter = { id };
 
-      const result = await MODELS
-        .findOne(users,{
-          where: whereFilter,
-          attributes: {
-            // include: [],
-            exclude: ['password']
-          },
-          include: [
-            { model: userGroups, as: 'userGroups' , attributes:['id','userGroupName'] },
-            { model: provinces, as: 'provinces', required: false, attributes:['id','provinceName'] },
-
-          ]
-        })
-        .catch(error => {
-          ErrorHelpers.errorThrow(error, 'getInfoError', 'UserServices');
-        });
+      const result = await MODELS.findOne(users, {
+        where: whereFilter,
+        attributes: {
+          // include: [],
+          exclude: ['password']
+        },
+        include: [
+          { model: userGroups, as: 'userGroups', attributes: ['id', 'userGroupName'] },
+          { model: provinces, as: 'provinces', required: false, attributes: ['id', 'provinceName'] }
+        ]
+      }).catch(error => {
+        ErrorHelpers.errorThrow(error, 'getInfoError', 'UserServices');
+      });
 
       finnalyResult = result;
-      if(!finnalyResult)
-      {
+      if (!finnalyResult) {
         throw new ApiErrors.BaseError({
           statusCode: 202,
-          type: 'crudNotExisted',
+          type: 'crudNotExisted'
         });
       }
     } catch (error) {
@@ -117,19 +116,18 @@ export default {
   find_one: param =>
     new Promise((resolve, reject) => {
       try {
-        MODELS
-          .findOne(users,{
-            where: {
-              username: param.userName
-            },
-            include: [
-              {
-                model: userGroups,
-                as: 'userGroups',
-                attributes: ['id', 'userGroupName']
-              }
-            ]
-            /* include: [
+        MODELS.findOne(users, {
+          where: {
+            username: param.userName
+          },
+          include: [
+            {
+              model: userGroups,
+              as: 'userGroups',
+              attributes: ['id', 'userGroupName']
+            }
+          ]
+          /* include: [
           {
             model: roles,
             as: 'roleDetails',
@@ -139,7 +137,7 @@ export default {
             ]
           }
         ] */
-          })
+        })
           .then(result => {
             resolve(result);
           })
@@ -150,24 +148,23 @@ export default {
         reject(ErrorHelpers.errorReject(error, 'crudError', 'UserServices'));
       }
     }),
-    find: param =>
+  find: param =>
     new Promise((resolve, reject) => {
       try {
-        MODELS
-          .findOne(users,{
-            where: param,
-            attributes: {
-              // include: [],
-             exclude: ['password']
-            },
-            include: [
-              {
-                model: userGroups,
-                as: 'userGroups',
-                attributes:['id','userGroupName']
-              }
-            ]
-          })
+        MODELS.findOne(users, {
+          where: param,
+          attributes: {
+            // include: [],
+            exclude: ['password']
+          },
+          include: [
+            {
+              model: userGroups,
+              as: 'userGroups',
+              attributes: ['id', 'userGroupName']
+            }
+          ]
+        })
           .then(result => {
             resolve(result);
           })
@@ -188,10 +185,10 @@ export default {
 
       let whereFilter = {
         username: entity.username
-      }
+      };
       let whereFilterEmail = {
         email: entity.email
-      }
+      };
       // whereFilter = await filterHelpers.makeStringFilterAbsolutely(['name'], whereFilter, 'users');
 
       const infoArr = Array.from(
@@ -199,8 +196,7 @@ export default {
           preCheckHelpers.createPromiseCheckNew(
             MODELS.findOne(users, {
               where: whereFilter
-            })
-           ,
+            }),
             entity.username ? true : false,
             TYPE_CHECK.CHECK_DUPLICATE,
             { parent: 'api.users.username' }
@@ -208,13 +204,11 @@ export default {
           preCheckHelpers.createPromiseCheckNew(
             MODELS.findOne(users, {
               where: whereFilterEmail
-            })
-           ,
+            }),
             entity.email ? true : false,
             TYPE_CHECK.CHECK_DUPLICATE,
             { parent: 'api.users.email' }
-          ),
-
+          )
         ])
       );
 
@@ -231,7 +225,7 @@ export default {
       entity = Object.assign(param.entity, { password: passMd5 });
 
       console.log('entity ', entity);
-      finnalyResult = await MODELS.create(users,entity).catch(err => {
+      finnalyResult = await MODELS.create(users, entity).catch(err => {
         console.log('create user err: ', err);
         throw err;
       });
@@ -255,10 +249,10 @@ export default {
 
       let whereFilter = {
         username: entity.username
-      }
+      };
       let whereFilterEmail = {
         email: entity.email
-      }
+      };
       // whereFilter = await filterHelpers.makeStringFilterAbsolutely(['name'], whereFilter, 'users');
 
       const infoArr = Array.from(
@@ -266,8 +260,7 @@ export default {
           preCheckHelpers.createPromiseCheckNew(
             MODELS.findOne(users, {
               where: whereFilter
-            })
-           ,
+            }),
             entity.username ? true : false,
             TYPE_CHECK.CHECK_DUPLICATE,
             { parent: 'api.users.username' }
@@ -275,13 +268,11 @@ export default {
           preCheckHelpers.createPromiseCheckNew(
             MODELS.findOne(users, {
               where: whereFilterEmail
-            })
-           ,
+            }),
             entity.email ? true : false,
             TYPE_CHECK.CHECK_DUPLICATE,
             { parent: 'api.users.email' }
-          ),
-
+          )
         ])
       );
 
@@ -298,27 +289,29 @@ export default {
       entity = Object.assign(param.entity, { password: passMd5 });
 
       console.log('entity ', entity);
-      finnalyResult = await MODELS.create(users,entity).catch(err => {
+      finnalyResult = await MODELS.create(users, entity).catch(err => {
         console.log('create user err: ', err);
         throw err;
       });
 
       if (!finnalyResult) {
         throw new ApiErrors.BaseError({ statusCode: 202, message: 'Tạo mới thất bại' });
-      }
-      else{
-
+      } else {
         tokenSerivce.createToken(finnalyResult.dataValues).then(data => {
-          sendEmailService.sendGmail(
-            {
-                "emailTo":finnalyResult.email,
-                "subject":"KÍCH HOẠT TÀI KHOẢN HỆ THỐNG VNDMS - QUẢN LÝ DỮ LIỆU TRUYỀN THÔNG",
-                "sendTypeMail":"html",
-                "body":"Xin chao "+finnalyResult.fullname+" <br/> Bạn đã đăng ký tài khoản trên HỆ THỐNG VNDMS - ẢNH VIỄN THÁM. <br/> Để kích hoạt tài khoản vui lòng click vào link dưới <a href=\""+CONFIG['WEB_LINK_CLIENT']+"active-user?token="+data.token+"\">đây</a>."
-            }
-          )
-        })
-
+          sendEmailService.sendGmail({
+            emailTo: finnalyResult.email,
+            subject: 'KÍCH HOẠT TÀI KHOẢN HỆ THỐNG VNDMS - QUẢN LÝ DỮ LIỆU TRUYỀN THÔNG',
+            sendTypeMail: 'html',
+            body:
+              'Xin chao ' +
+              finnalyResult.fullname +
+              ' <br/> Bạn đã đăng ký tài khoản trên HỆ THỐNG VNDMS - ẢNH VIỄN THÁM. <br/> Để kích hoạt tài khoản vui lòng click vào link dưới <a href="' +
+              CONFIG['WEB_LINK_CLIENT'] +
+              'active-user?token=' +
+              data.token +
+              '">đây</a>.'
+          });
+        });
       }
     } catch (error) {
       ErrorHelpers.errorThrow(error, 'crudError', 'UserServices');
@@ -332,7 +325,7 @@ export default {
     try {
       const { entity } = param;
 
-      const foundUser = await MODELS.findOne(users,{
+      const foundUser = await MODELS.findOne(users, {
         where: {
           id: param.id
         }
@@ -342,12 +335,12 @@ export default {
         let whereFilter = {
           id: { $ne: param.id },
           username: entity.username || foundUser.username
-        }
+        };
 
         let whereFilterEmail = {
           id: { $ne: param.id },
           email: entity.email || foundUser.email
-        }
+        };
         // whereFilter = await filterHelpers.makeStringFilterRelatively(['name'], whereFilter, 'users');
 
         const infoArr = Array.from(
@@ -355,8 +348,7 @@ export default {
             preCheckHelpers.createPromiseCheckNew(
               MODELS.findOne(users, {
                 where: whereFilter
-              })
-             ,
+              }),
               entity.username ? true : false,
               TYPE_CHECK.CHECK_DUPLICATE,
               { parent: 'api.users.username' }
@@ -364,13 +356,11 @@ export default {
             preCheckHelpers.createPromiseCheckNew(
               MODELS.findOne(users, {
                 where: whereFilterEmail
-              })
-             ,
+              }),
               entity.email ? true : false,
               TYPE_CHECK.CHECK_DUPLICATE,
               { parent: 'api.users.email' }
-            ),
-
+            )
           ])
         );
 
@@ -382,7 +372,7 @@ export default {
           });
         }
 
-        await MODELS.update(users,entity, { where: { id: Number(param.id) } }).catch(error => {
+        await MODELS.update(users, entity, { where: { id: Number(param.id) } }).catch(error => {
           throw new ApiErrors.BaseError({
             statusCode: 202,
             type: 'crudInfo',
@@ -390,7 +380,7 @@ export default {
           });
         });
 
-        finnalyResult = await MODELS.findOne(users,{ where: { id: param.id } }).catch(err => {
+        finnalyResult = await MODELS.findOne(users, { where: { id: param.id } }).catch(err => {
           throw err;
         });
 
@@ -412,55 +402,61 @@ export default {
 
     return { status: 1, result: finnalyResult };
   },
-  update_status: param => new Promise((resolve, reject) => {
-    try {
-      // console.log('block id', param.id);
-      const id = param.id;
-      const entity = param.entity;
+  update_status: param =>
+    new Promise((resolve, reject) => {
+      try {
+        // console.log('block id', param.id);
+        const id = param.id;
+        const entity = param.entity;
 
-      MODELS.findOne(users,
-        {
+        MODELS.findOne(users, {
           where: {
             id
           },
-          logging:console.log
-        }
-      ).then(findEntity => {
-        // console.log("findPlace: ", findPlace)
-        if (!findEntity) {
-          reject(new ApiErrors.BaseError({
-            statusCode: 202,
-            type: 'crudNotExisted',
-          }));
-        } else {
-          MODELS.update(users,
-            entity
-            ,
-            {
-              where:{id: id}
-            }).then(() => {
-            // console.log("rowsUpdate: ", rowsUpdate)
-            MODELS.findOne(users,{ where: { id: param.id } }).then(result => {
-              if (!result) {
-                reject(new ApiErrors.BaseError({
+          logging: console.log
+        })
+          .then(findEntity => {
+            // console.log("findPlace: ", findPlace)
+            if (!findEntity) {
+              reject(
+                new ApiErrors.BaseError({
                   statusCode: 202,
-                  type: 'deleteError',
-                }));
-              } else resolve({ status: 1,result: result });
-            }).catch(err => {
-              reject(ErrorHelpers.errorReject(err, 'crudError', 'UserServices'))
-            });
-          }).catch(err => {
-            reject(ErrorHelpers.errorReject(err, 'crudError', 'UserServices'))
+                  type: 'crudNotExisted'
+                })
+              );
+            } else {
+              MODELS.update(users, entity, {
+                where: { id: id }
+              })
+                .then(() => {
+                  // console.log("rowsUpdate: ", rowsUpdate)
+                  MODELS.findOne(users, { where: { id: param.id } })
+                    .then(result => {
+                      if (!result) {
+                        reject(
+                          new ApiErrors.BaseError({
+                            statusCode: 202,
+                            type: 'deleteError'
+                          })
+                        );
+                      } else resolve({ status: 1, result: result });
+                    })
+                    .catch(err => {
+                      reject(ErrorHelpers.errorReject(err, 'crudError', 'UserServices'));
+                    });
+                })
+                .catch(err => {
+                  reject(ErrorHelpers.errorReject(err, 'crudError', 'UserServices'));
+                });
+            }
           })
-        }
-      }).catch(err => {
-        reject(ErrorHelpers.errorReject(err, 'crudError', 'UserServices'))
-      })
-    } catch (err) {
-      reject(ErrorHelpers.errorReject(err, 'crudError', 'UserServices'))
-    }
-  }),
+          .catch(err => {
+            reject(ErrorHelpers.errorReject(err, 'crudError', 'UserServices'));
+          });
+      } catch (err) {
+        reject(ErrorHelpers.errorReject(err, 'crudError', 'UserServices'));
+      }
+    }),
   changePass: param =>
     new Promise((resolve, reject) => {
       try {
@@ -491,17 +487,15 @@ export default {
         const whereFiter = { id: param.id, password: oldPassMd5 };
 
         console.log('whereFiter: ', whereFiter);
-        MODELS
-          .findOne(users,{ where: whereFiter })
+        MODELS.findOne(users, { where: whereFiter })
           .then(findUser => {
             if (findUser) {
               newPassMd5 = md5(entity.NewPassWord);
               entity = Object.assign(param.entity, { password: newPassMd5 });
-              MODELS
-                .update(users,entity, {
-                  where: { id: Number(param.id) }
-                  // fields: ['password']
-                })
+              MODELS.update(users, entity, {
+                where: { id: Number(param.id) }
+                // fields: ['password']
+              })
                 .then(rowsUpdate => {
                   console.log('rowsUpdate: ', rowsUpdate);
                   // usersModel.findById(param.id).then(result => {
@@ -542,28 +536,23 @@ export default {
 
         console.log('md5: ', passMd5);
         entity = Object.assign({}, { password: passMd5 });
-        MODELS
-          .update(users,entity, {
-            where: { id: Number(param.id) }
-            // fields: ['password']
-          })
+        MODELS.update(users, entity, {
+          where: { id: Number(param.id) }
+          // fields: ['password']
+        })
           .then(rowsUpdate => {
             console.log('rowsUpdate: ', rowsUpdate);
             if (rowsUpdate[0] > 0) {
-              MODELS.findOne(users,{where :{id:param.id}}).then(resultUser =>{
-                if(resultUser)
-                {
-                  sendEmailService.sendGmail(
-                    {
-                        "emailTo":resultUser.dataValues.email,
-                        "subject":"HỆ THỐNG VNDMS - QUẢN LÝ DỮ LIỆU TRUYỀN THÔNG - THÔNG BÁO ĐỔI MẬT KHẨU",
-                        "sendTypeMail":"html",
-                        "body":"Chào bạn, Mật khẩu mới của bạn là "+ entity.password
-                    }
-                  );
+              MODELS.findOne(users, { where: { id: param.id } }).then(resultUser => {
+                if (resultUser) {
+                  sendEmailService.sendGmail({
+                    emailTo: resultUser.dataValues.email,
+                    subject: 'HỆ THỐNG VNDMS - QUẢN LÝ DỮ LIỆU TRUYỀN THÔNG - THÔNG BÁO ĐỔI MẬT KHẨU',
+                    sendTypeMail: 'html',
+                    body: 'Chào bạn, Mật khẩu mới của bạn là ' + entity.password
+                  });
                 }
               });
-
 
               resolve({ status: 1, message: 'Thành Công' });
             } else {
@@ -578,61 +567,62 @@ export default {
         resolve({ status: -1, message: `Lỗi cơ sở dữ liệu: ${error}` });
       }
     }),
-    requestForgetPass:  param =>
-    new Promise(async(resolve, reject) => {
+  requestForgetPass: param =>
+    new Promise(async (resolve, reject) => {
       let result;
 
       try {
         console.log('param: ', param);
 
-        const objectUser =  await MODELS.findOne(users,{
-          where: {email: param.email}
-        })
+        const objectUser = await MODELS.findOne(users, {
+          where: { email: param.email }
+        });
 
-        if(objectUser)
-        {
-
-          console.log("objectUser==",objectUser)
-          if(objectUser.dataValues || objectUser.dataValues.status === -1 || objectUser.dataValues.status === 0 )
-          {
-            reject(new ApiErrors.BaseError({
+        if (objectUser) {
+          console.log('objectUser==', objectUser);
+          if (objectUser.dataValues || objectUser.dataValues.status === -1 || objectUser.dataValues.status === 0) {
+            reject(
+              new ApiErrors.BaseError({
+                statusCode: 202,
+                type: 'crudNotExisted',
+                message: viMessage['api.users.notexists.status']
+              })
+            );
+          } else {
+            tokenSerivce.createToken(objectUser.dataValues).then(data => {
+              sendEmailService.sendGmail({
+                emailTo: param.email,
+                subject: 'QUÊN MẬT KHẨU HỆ THỐNG VNDMS - QUẢN LÝ DỮ LIỆU TRUYỀN THÔNG',
+                sendTypeMail: 'html',
+                body:
+                  'Chào bạn, bạn muốn lấy lại mật khẩu vui lòng click vào <a href="' +
+                  CONFIG['WEB_LINK_CLIENT'] +
+                  'password-recovery?token=' +
+                  data.token +
+                  '">đây</a>!'
+              });
+              result = { success: true };
+              resolve(result);
+            });
+          }
+        } else {
+          reject(
+            new ApiErrors.BaseError({
               statusCode: 202,
               type: 'crudNotExisted',
-              message: viMessage['api.users.notexists.status'],
-            }));
-          }
-          else
-          {
-            tokenSerivce.createToken(objectUser.dataValues).then(data => {
-              sendEmailService.sendGmail(
-                {
-                    "emailTo":param.email,
-                    "subject":"QUÊN MẬT KHẨU HỆ THỐNG VNDMS - QUẢN LÝ DỮ LIỆU TRUYỀN THÔNG",
-                    "sendTypeMail":"html",
-                    "body":"Chào bạn, bạn muốn lấy lại mật khẩu vui lòng click vào <a href=\""+CONFIG['WEB_LINK_CLIENT']+"password-recovery?token="+data.token+"\">đây</a>!"
-                }
-              );
-              result = {success:true}
-              resolve(result);
+              message: viMessage['api.users.notexists.email']
             })
-          }
-
+          );
+          // result = {sucess:false}
         }
-        else{
-          reject(new ApiErrors.BaseError({
-            statusCode: 202,
-            type: 'crudNotExisted',
-            message: viMessage['api.users.notexists.email'],
-          }));
-         // result = {sucess:false}
-        }
-
       } catch (error) {
-        reject(new ApiErrors.BaseError({
-          statusCode: 202,
-          type: 'ERRORS',
-          message: error,
-        }));
+        reject(
+          new ApiErrors.BaseError({
+            statusCode: 202,
+            type: 'ERRORS',
+            message: error
+          })
+        );
       }
-    }),
+    })
 };
