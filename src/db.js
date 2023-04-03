@@ -54,7 +54,7 @@ const logging = process.env.NODE_ENV !== 'production' && process.env.LOGGING ===
 export const sequelize = new Sequelize(process.env.SQL_DATABASE, process.env.SQL_USER, process.env.SQL_PASSWORD, {
   host: process.env.SQL_SERVER,
   port: process.env.SQL_PORT,
-  dialect: 'mysql',
+  dialect: 'mariadb',
   // dialectModule: 'require("mysql")',
   // dialectModulePath: 'mysql2',
   dialectOptions: {

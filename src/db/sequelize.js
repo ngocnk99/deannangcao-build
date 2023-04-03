@@ -60,12 +60,11 @@ const timezone = '+07:00';
 const logging = process.env.NODE_ENV !== 'production' && process.env.LOGGING === 'true' ? console.log : false;
 
 // if (process.env.NODE_ENV !== 'production') logging = process.env.LOGGING === 'true';
-console.log("check ----------------------------------------")
-console.log(process.env.SQL_DATABASE, process.env.SQL_USER, process.env.SQL_PASSWORD)
+
 export const sequelize = new Sequelize(process.env.SQL_DATABASE, process.env.SQL_USER, process.env.SQL_PASSWORD, {
   host: process.env.SQL_SERVER,
   port: process.env.SQL_PORT,
-  dialect: 'mysql',
+  dialect: 'mariadb',
   // dialectModule: 'require("mysql")',
   // dialectModulePath: 'mysql2',
   dialectOptions: {

@@ -88,7 +88,8 @@ const modules = [
   require('./questions'),
   require('./lecturers'),
   require('./photoInterviews'),
-  require('./affiliateWebsites')
+  require('./affiliateWebsites'),
+  require('./photoInterviews')
 ];
 
 // Initialize models
@@ -105,7 +106,6 @@ modules.forEach(module => {
 // console.log("models db: ", db)
 
 associate(models);
-
 /* Object.keys(models).forEach(function (modelName) {
   // console.log("modelName: ", modelName)
   if ('associate' in models[modelName]) {

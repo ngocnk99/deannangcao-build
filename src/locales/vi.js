@@ -578,5 +578,6 @@ export default {
   ...questions,
   ...lecturers,
   ...photoInterviews,
-  ...affiliateWebsites
+  ...affiliateWebsites,
+  ...photoInterviews
 };

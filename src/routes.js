@@ -60,6 +60,9 @@ import questionsRoutes from './routes/questionsRoutes';
 import lecturersRoutes from './routes/lecturersRoutes';
 import photoInterviewsRoutes from './routes/photoInterviewsRoutes';
 
+/**
+ * Contains all API routes for the application.
+ */
 const router = Router();
 
 /**
