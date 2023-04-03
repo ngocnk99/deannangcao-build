@@ -23,6 +23,7 @@ import logger, { logStream } from './utils/logger';
 import * as errorHandler from './middlewares/errorHandler';
 import routePassword from './routes/genneratePass';
 import authRoutes from './routes/authRoutes';
+// import models from './entity/index'
 // import exampleRoutes from './routes/exampleRoutes';
 
 // import CONFIG from './config';

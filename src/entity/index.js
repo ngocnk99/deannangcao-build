@@ -87,6 +87,8 @@ const modules = [
   require('./newGroups'),
   require('./questions'),
   require('./lecturers'),
+  require('./photoInterviews'),
+  require('./affiliateWebsites'),
   require('./photoInterviews')
 ];
 
@@ -96,6 +98,10 @@ modules.forEach(module => {
 
   console.log('model name ', model.name);
   models[model.name] = model;
+  // model.sync({
+  //   alter: true,
+  //   force: false
+  // });
 });
 // console.log("models db: ", db)
 

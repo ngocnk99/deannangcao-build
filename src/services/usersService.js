@@ -117,6 +117,7 @@ export default {
     new Promise((resolve, reject) => {
       try {
         MODELS.findOne(users, {
+          logging: true,
           where: {
             username: param.userName
           },

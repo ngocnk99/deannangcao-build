@@ -54,7 +54,11 @@ import contentSocialsStatisticRoutes from './routes/contentSocialsStatisticRoute
 import witaiRoutes from './routes/witaiRoutes';
 import newKindOfDisasterRoutes from './routes/newKindOfDisasterRoutes';
 import newGroupsRoutes from './routes/newGroupsRoutes';
+
+import affiliateWebsitesRoutes from './routes/affiliateWebsitesRoutes';
 import questionsRoutes from './routes/questionsRoutes';
+import lecturersRoutes from './routes/lecturersRoutes';
+import photoInterviewsRoutes from './routes/photoInterviewsRoutes';
 
 /**
  * Contains all API routes for the application.
@@ -131,5 +135,8 @@ router.use('/c/witai', witaiRoutes);
 router.use('/c/newKindOfDisaster', newKindOfDisasterRoutes);
 router.use('/c/newGroups', newGroupsRoutes);
 router.use('/c/questions', questionsRoutes);
+router.use('/c/lecturers', lecturersRoutes);
+router.use('/c/photoInterviews', photoInterviewsRoutes);
+router.use('/c/affiliateWebsites', affiliateWebsitesRoutes);
 
 export default router;

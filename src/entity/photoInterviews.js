@@ -14,20 +14,16 @@ module.exports = function(sequelize, DataTypes) {
       },
 
       photoInterviewsName: {
-        type: DataTypes.STRING(100),
+        type: DataTypes.STRING(500),
         allowNull: false,
         field: 'photoInterviewsName'
       },
-      images: {
+      files: {
         type: DataTypes.JSON,
         allowNull: true,
-        field: 'images'
+        field: 'files'
       },
-      position: {
-        type: DataTypes.STRING(100),
-        allowNull: false,
-        field: 'position'
-      },
+
       shortDescription: {
         type: DataTypes.TEXT,
         allowNull: true,

@@ -42,6 +42,8 @@ import newspapersRoutes from './routerWeb/newspapersRoutes';
 import contentReviewsRoutes from './routerWeb/contentReviewsRoutes';
 import newGroupsRoutes from './routerWeb/newGroupsRoutes';
 import questionsRoutes from './routerWeb/questionsRoutes';
+import lecturersRoutes from './routes/lecturersRoutes';
+import photoInterviewsRoutes from './routes/photoInterviewsRoutes';
 
 /**
  * Contains all API routes for the application.
@@ -105,4 +107,7 @@ router.use('/c/newspapers', newspapersRoutes);
 router.use('/c/contentReviews', contentReviewsRoutes);
 router.use('/c/newGroups', newGroupsRoutes);
 router.use('/c/questions', questionsRoutes);
+router.use('/c/lecturers', lecturersRoutes);
+router.use('/c/photoInterviews', photoInterviewsRoutes);
+
 export default router;

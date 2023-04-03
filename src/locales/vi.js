@@ -135,6 +135,7 @@ import botTypeOfTrackedObject from './vi-Vn/botTypeOfTrackedObject';
 import contentSocialsStatistic from './vi-Vn/contentSocialsStatistic';
 import newKindOfDisaster from './vi-Vn/newKindOfDisaster';
 import newGroups from './vi-Vn/newGroups';
+import affiliateWebsites from './vi-Vn/affiliatewebsites';
 import questions from './vi-Vn/questions';
 import photoInterviews from './vi-Vn/photoInterviews';
 import lecturers from './vi-Vn/lecturers';
@@ -257,6 +258,7 @@ export default {
   status: 'Trạng thái',
   price: 'Giá',
   dateUpdated: 'Thời gian cập nhật',
+  dateCreated: 'Ngày tạo',
   createDate: 'Ngày tạo',
   FromDate: 'Ngày bắt đầu tìm kiếm',
   ToDate: 'Ngày kết thúc tìm kiếm',
@@ -575,5 +577,7 @@ export default {
   ...newGroups,
   ...questions,
   ...lecturers,
+  ...photoInterviews,
+  ...affiliateWebsites,
   ...photoInterviews
 };

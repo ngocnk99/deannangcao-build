@@ -3,19 +3,20 @@ import MODELS from '../models/models';
 import models from '../entity/index';
 import * as ApiErrors from '../errors';
 import ErrorHelpers from '../helpers/errorHelpers';
-import _ from 'lodash';
+// import _ from 'lodash';
 import viMessage from '../locales/vi';
 import filterHelpers from '../helpers/filterHelpers';
 import preCheckHelpers, { TYPE_CHECK } from '../helpers/preCheckHelpers';
+import _ from 'lodash';
 
-const { lecturers, users, wards, districts, provinces } = models;
+const { photoInterviews, users, wards, districts, provinces } = models;
 
 export default {
   get_list: param =>
     new Promise(async (resolve, reject) => {
       try {
         const { filter, range, sort, attributes } = param;
-        let whereFilter = _.omit(filter, ['provincesId', 'districtsId']);
+        let whereFilter = _.omit(filter, ['']);
 
         console.log(filter);
         try {
@@ -24,14 +25,15 @@ export default {
           reject(error);
         }
 
-        const whereDistric = _.pick(filter, ['districtsId']);
-        const whereProvinces = _.pick(filter, ['provincesId']);
-
         const perPage = range[1] - range[0] + 1;
         const page = Math.floor(range[0] / perPage);
         const att = filterHelpers.atrributesHelper(attributes);
 
-        whereFilter = await filterHelpers.makeStringFilterRelatively(['lecturersName'], whereFilter, 'lecturers');
+        whereFilter = await filterHelpers.makeStringFilterRelatively(
+          ['photoInterviewsName'],
+          whereFilter,
+          'photoInterviews'
+        );
 
         if (!whereFilter) {
           whereFilter = { ...filter };
@@ -39,7 +41,7 @@ export default {
 
         console.log('where', whereFilter);
 
-        MODELS.findAndCountAll(lecturers, {
+        MODELS.findAndCountAll(photoInterviews, {
           where: whereFilter,
           order: sort,
           offset: range[0],
@@ -51,23 +53,17 @@ export default {
               model: wards,
               as: 'wards',
               attributes: ['id', 'wardName'],
-              required: filter.wardsId || filter.provincesId || filter.districtsId ? true : false,
-              where: whereDistric,
-              include: [
-                {
-                  model: districts,
-                  as: 'districts',
-                  attributes: ['id', 'districtName'],
-                  where: whereProvinces,
-                  include: [
-                    {
-                      model: provinces,
-                      as: 'provinces',
-                      attributes: ['id', 'provinceName']
-                    }
-                  ]
-                }
-              ]
+              required: false
+            },
+            {
+              model: districts,
+              as: 'districts',
+              attributes: ['id', 'districtName']
+            },
+            {
+              model: provinces,
+              as: 'provinces',
+              attributes: ['id', 'provinceName']
             },
             {
               model: users,
@@ -85,10 +81,10 @@ export default {
             });
           })
           .catch(err => {
-            reject(ErrorHelpers.errorReject(err, 'getListError', 'lecturerservice'));
+            reject(ErrorHelpers.errorReject(err, 'getListError', 'photoInterviewservice'));
           });
       } catch (err) {
-        reject(ErrorHelpers.errorReject(err, 'getListError', 'lecturerservice'));
+        reject(ErrorHelpers.errorReject(err, 'getListError', 'photoInterviewservice'));
       }
     }),
 
@@ -100,7 +96,7 @@ export default {
         const att = filterHelpers.atrributesHelper(param.attributes, ['userCreatorsId']);
 
         if (isNaN(Number(id))) {
-          const findByUrlSlug = await MODELS.findOne(lecturers, {
+          const findByUrlSlug = await MODELS.findOne(photoInterviews, {
             where: { urlSlug: id },
             attributes: ['id']
           });
@@ -114,7 +110,7 @@ export default {
             id = findByUrlSlug.id;
           }
         }
-        MODELS.findOne(lecturers, {
+        MODELS.findOne(photoInterviews, {
           where: { id },
           attributes: att,
           include: [
@@ -122,21 +118,17 @@ export default {
               model: wards,
               as: 'wards',
               attributes: ['id', 'wardName'],
-              required: false,
-              include: [
-                {
-                  model: districts,
-                  as: 'districts',
-                  attributes: ['id', 'districtName'],
-                  include: [
-                    {
-                      model: provinces,
-                      as: 'provinces',
-                      attributes: ['id', 'provinceName']
-                    }
-                  ]
-                }
-              ]
+              required: false
+            },
+            {
+              model: districts,
+              as: 'districts',
+              attributes: ['id', 'districtName']
+            },
+            {
+              model: provinces,
+              as: 'provinces',
+              attributes: ['id', 'provinceName']
             },
             {
               model: users,
@@ -158,10 +150,10 @@ export default {
             resolve(result);
           })
           .catch(err => {
-            reject(ErrorHelpers.errorReject(err, 'getInfoError', 'lecturerservice'));
+            reject(ErrorHelpers.errorReject(err, 'getInfoError', 'photoInterviewservice'));
           });
       } catch (err) {
-        reject(ErrorHelpers.errorReject(err, 'getInfoError', 'lecturerservice'));
+        reject(ErrorHelpers.errorReject(err, 'getInfoError', 'photoInterviewservice'));
       }
     }),
   create: async param => {
@@ -170,23 +162,27 @@ export default {
     try {
       const entity = param.entity;
 
-      console.log('lecturerservice create: ', entity);
+      console.log('photoInterviewservice create: ', entity);
       let whereFilter = {
-        lecturersName: entity.lecturersName
+        photoInterviewsName: entity.photoInterviewsName
       };
 
-      whereFilter = await filterHelpers.makeStringFilterAbsolutely(['lecturersName'], whereFilter, 'lecturers');
+      whereFilter = await filterHelpers.makeStringFilterAbsolutely(
+        ['photoInterviewsName'],
+        whereFilter,
+        'photoInterviews'
+      );
 
       const infoArr = Array.from(
         await Promise.all([
           preCheckHelpers.createPromiseCheckNew(
-            MODELS.findOne(lecturers, {
+            MODELS.findOne(photoInterviews, {
               attributes: ['id'],
               where: whereFilter
             }),
-            entity.lecturersName ? true : false,
+            entity.photoInterviewsName ? true : false,
             TYPE_CHECK.CHECK_DUPLICATE,
-            { parent: 'api.lecturers.lecturersName' }
+            { parent: 'api.photoInterviews.photoInterviewsName' }
           )
         ])
       );
@@ -199,7 +195,7 @@ export default {
         });
       }
 
-      finnalyResult = await MODELS.create(lecturers, entity).catch(error => {
+      finnalyResult = await MODELS.create(photoInterviews, entity).catch(error => {
         throw new ApiErrors.BaseError({
           statusCode: 202,
           type: 'crudError',
@@ -216,7 +212,7 @@ export default {
       }
 
       if (finnalyResult.urlSlug) {
-        const checkDulicate = await MODELS.findOne(lecturers, {
+        const checkDulicate = await MODELS.findOne(photoInterviews, {
           where: {
             id: { $ne: finnalyResult.id },
             urlSlug: finnalyResult.urlSlug
@@ -225,7 +221,7 @@ export default {
 
         if (checkDulicate) {
           await MODELS.update(
-            lecturers,
+            photoInterviews,
             {
               urlSlug: finnalyResult + '-' + finnalyResult.id
             },
@@ -236,7 +232,7 @@ export default {
         }
       }
     } catch (error) {
-      ErrorHelpers.errorThrow(error, 'crudError', 'lecturerservice');
+      ErrorHelpers.errorThrow(error, 'crudError', 'photoInterviewservice');
     }
 
     return { result: finnalyResult };
@@ -247,15 +243,15 @@ export default {
     try {
       const entity = param.entity;
 
-      console.log('lecturerservice update: ', entity);
+      console.log('photoInterviewservice update: ', entity);
 
-      const foundGateway = await MODELS.findOne(lecturers, {
+      const foundGateway = await MODELS.findOne(photoInterviews, {
         where: {
           id: param.id
         }
       }).catch(error => {
         throw preCheckHelpers.createErrorCheck(
-          { typeCheck: TYPE_CHECK.GET_INFO, modelStructure: { parent: 'lecturers' } },
+          { typeCheck: TYPE_CHECK.GET_INFO, modelStructure: { parent: 'photoInterviews' } },
           error
         );
       });
@@ -263,21 +259,25 @@ export default {
       if (foundGateway) {
         let whereFilter = {
           id: { $ne: param.id },
-          lecturersName: entity.lecturersName || foundGateway.lecturersName
+          photoInterviewsName: entity.photoInterviewsName || foundGateway.photoInterviewsName
         };
 
-        whereFilter = await filterHelpers.makeStringFilterAbsolutely(['lecturersName'], whereFilter, 'lecturers');
+        whereFilter = await filterHelpers.makeStringFilterAbsolutely(
+          ['photoInterviewsName'],
+          whereFilter,
+          'photoInterviews'
+        );
 
         const infoArr = Array.from(
           await Promise.all([
             preCheckHelpers.createPromiseCheckNew(
-              MODELS.findOne(lecturers, {
+              MODELS.findOne(photoInterviews, {
                 attributes: ['id'],
                 where: whereFilter
               }),
-              entity.lecturersName || entity.provincesId ? true : false,
+              entity.photoInterviewsName || entity.provincesId ? true : false,
               TYPE_CHECK.CHECK_DUPLICATE,
-              { parent: 'api.lecturers.lecturersName' }
+              { parent: 'api.photoInterviews.photoInterviewsName' }
             )
           ])
         );
@@ -291,7 +291,7 @@ export default {
         }
 
         if (entity.urlSlug && entity.urlSlug !== foundGateway.urlSlug) {
-          const checkDulicate = await MODELS.findOne(lecturers, {
+          const checkDulicate = await MODELS.findOne(photoInterviews, {
             where: {
               id: { $ne: finnalyResult.id },
               urlSlug: entity.urlSlug
@@ -303,7 +303,7 @@ export default {
           }
         }
         await MODELS.update(
-          lecturers,
+          photoInterviews,
           { ...entity, dateUpdated: new Date() },
           { where: { id: parseInt(param.id) } }
         ).catch(error => {
@@ -314,7 +314,7 @@ export default {
           });
         });
 
-        finnalyResult = await MODELS.findOne(lecturers, { where: { id: param.id } }).catch(error => {
+        finnalyResult = await MODELS.findOne(photoInterviews, { where: { id: param.id } }).catch(error => {
           throw new ApiErrors.BaseError({
             statusCode: 202,
             type: 'crudInfo',
@@ -338,7 +338,7 @@ export default {
         });
       }
     } catch (error) {
-      ErrorHelpers.errorThrow(error, 'crudError', 'lecturerservice');
+      ErrorHelpers.errorThrow(error, 'crudError', 'photoInterviewservice');
     }
 
     return { result: finnalyResult };
@@ -350,7 +350,7 @@ export default {
         const id = param.id;
         const entity = param.entity;
 
-        MODELS.findOne(lecturers, {
+        MODELS.findOne(photoInterviews, {
           where: {
             id
           },
@@ -367,7 +367,7 @@ export default {
               );
             } else {
               MODELS.update(
-                lecturers,
+                photoInterviews,
                 { ...entity, dateUpdated: new Date() },
                 {
                   where: { id: id }
@@ -375,7 +375,7 @@ export default {
               )
                 .then(() => {
                   // console.log("rowsUpdate: ", rowsUpdate)
-                  MODELS.findOne(lecturers, { where: { id: param.id } })
+                  MODELS.findOne(photoInterviews, { where: { id: param.id } })
                     .then(result => {
                       if (!result) {
                         reject(
@@ -387,19 +387,19 @@ export default {
                       } else resolve({ status: 1, result: result });
                     })
                     .catch(err => {
-                      reject(ErrorHelpers.errorReject(err, 'crudError', 'lecturersServices'));
+                      reject(ErrorHelpers.errorReject(err, 'crudError', 'photoInterviewsServices'));
                     });
                 })
                 .catch(err => {
-                  reject(ErrorHelpers.errorReject(err, 'crudError', 'lecturersServices'));
+                  reject(ErrorHelpers.errorReject(err, 'crudError', 'photoInterviewsServices'));
                 });
             }
           })
           .catch(err => {
-            reject(ErrorHelpers.errorReject(err, 'crudError', 'lecturersServices'));
+            reject(ErrorHelpers.errorReject(err, 'crudError', 'photoInterviewsServices'));
           });
       } catch (err) {
-        reject(ErrorHelpers.errorReject(err, 'crudError', 'lecturersServices'));
+        reject(ErrorHelpers.errorReject(err, 'crudError', 'photoInterviewsServices'));
       }
     }),
   delete: param =>
@@ -408,7 +408,7 @@ export default {
         console.log('delete id', param.id);
         const id = param.id;
 
-        MODELS.findOne(lecturers, {
+        MODELS.findOne(photoInterviews, {
           where: {
             id
           }
@@ -423,10 +423,10 @@ export default {
                 })
               );
             } else {
-              MODELS.destroy(lecturers, { where: { id: Number(param.id) } })
+              MODELS.destroy(photoInterviews, { where: { id: Number(param.id) } })
                 .then(() => {
                   // console.log("rowsUpdate: ", rowsUpdate)
-                  MODELS.findOne(lecturers, { where: { id: param.id } })
+                  MODELS.findOne(photoInterviews, { where: { id: param.id } })
                     .then(result => {
                       if (result) {
                         reject(
@@ -438,19 +438,19 @@ export default {
                       } else resolve({ status: 1 });
                     })
                     .catch(err => {
-                      reject(ErrorHelpers.errorReject(err, 'crudError', 'lecturerservice'));
+                      reject(ErrorHelpers.errorReject(err, 'crudError', 'photoInterviewservice'));
                     });
                 })
                 .catch(err => {
-                  reject(ErrorHelpers.errorReject(err, 'crudError', 'lecturerservice'));
+                  reject(ErrorHelpers.errorReject(err, 'crudError', 'photoInterviewservice'));
                 });
             }
           })
           .catch(err => {
-            reject(ErrorHelpers.errorReject(err, 'crudError', 'lecturerservice'));
+            reject(ErrorHelpers.errorReject(err, 'crudError', 'photoInterviewservice'));
           });
       } catch (err) {
-        reject(ErrorHelpers.errorReject(err, 'crudError', 'lecturerservice'));
+        reject(ErrorHelpers.errorReject(err, 'crudError', 'photoInterviewservice'));
       }
     }),
   bulk_create: async param => {
@@ -460,22 +460,22 @@ export default {
       const entity = param.entity;
 
       console.log('entity', entity);
-      if (entity.lecturers) {
+      if (entity.photoInterviews) {
         finnalyResult = await Promise.all(
-          entity.lecturers.map(element => {
+          entity.photoInterviews.map(element => {
             console.log('status', element.status);
 
             return MODELS.createOrUpdate(
-              lecturers,
+              photoInterviews,
               {
                 provincesId: entity.provincesId,
-                lecturersName: element.lecturersName,
+                photoInterviewsName: element.photoInterviewsName,
                 userCreatorsId: entity.userCreatorsId,
                 status: element.status,
                 districtIdentificationCode: element.districtIdentificationCode
               },
               {
-                where: { lecturersName: element.lecturersName, provincesId: entity.provincesId }
+                where: { photoInterviewsName: element.photoInterviewsName, provincesId: entity.provincesId }
               }
             ).catch(error => {
               throw new ApiErrors.BaseError({

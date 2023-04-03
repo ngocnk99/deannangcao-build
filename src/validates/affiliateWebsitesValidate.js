@@ -4,53 +4,24 @@ import viMessage from '../locales/vi';
 import regexPattern from '../utils/regexPattern';
 import { parseSort } from '../utils/helper';
 
-//  TODO id, photoInterviewsName, files, shortDescription, description, wardsId, points, files, shortDescription, description, wardsId, points, urlSlug, provincesIdId, provincesId, zone, provincesIdId, provincesId, zone
+//  TODO id, affiliateWebsitesName,urlSlug, status
 const DEFAULT_SCHEMA = {
-  photoInterviewsName: ValidateJoi.createSchemaProp({
+  affiliateWebsitesName: ValidateJoi.createSchemaProp({
     string: noArguments,
-    label: viMessage['api.photoInterviews.photoInterviewsName']
+    label: viMessage['api.affiliateWebsites.affiliateWebsitesName']
   }),
-  urlSlug: ValidateJoi.createSchemaProp({
+//   urlSlug: ValidateJoi.createSchemaProp({
+//     string: noArguments,
+//     label: viMessage['api.affiliateWebsites.urlSlug']
+//   }),
+  image: ValidateJoi.createSchemaProp({
+    object: noArguments,
+    label: viMessage['api.affiliateWebsites.image']
+  }),
+  link: ValidateJoi.createSchemaProp({
     string: noArguments,
-    label: viMessage['api.photoInterviews.urlSlug']
-  }),
-  shortDescription: ValidateJoi.createSchemaProp({
-    string: noArguments,
-    label: viMessage['api.photoInterviews.shortDescription'],
-    allow: [null, '']
-  }),
-  description: ValidateJoi.createSchemaProp({
-    string: noArguments,
-    label: viMessage['api.photoInterviews.description'],
-    allow: [null, '']
-  }),
-  files: ValidateJoi.createSchemaProp({
-    array: noArguments,
-    label: viMessage['api.photoInterviews.files']
-  }),
-  points: ValidateJoi.createSchemaProp({
-    array: noArguments,
-    label: viMessage['api.photoInterviews.points']
-  }),
-  wardsId: ValidateJoi.createSchemaProp({
-    number: noArguments,
-    label: viMessage['api.wards.id'],
-    allow: [null]
-  }),
-  districtsId: ValidateJoi.createSchemaProp({
-    number: noArguments,
-    label: viMessage['api.district.id'],
-    allow: [null]
-  }),
-  provincesId: ValidateJoi.createSchemaProp({
-    number: noArguments,
-    label: viMessage['api.provinces.id'],
-    allow: [null]
-  }),
-  zone: ValidateJoi.createSchemaProp({
-    number: noArguments,
-    label: viMessage['api.photoInterviews.zone'],
-    allow: [null]
+    label: viMessage['api.affiliateWebsites.link'],
+    allow:['',null]
   }),
   status: ValidateJoi.createSchemaProp({
     number: noArguments,
@@ -58,69 +29,54 @@ const DEFAULT_SCHEMA = {
   }),
   userCreatorsId: ValidateJoi.createSchemaProp({
     number: noArguments,
-    label: viMessage.userCreatorsId,
+    label: viMessage['userCreatorsId'],
     allow: null
   }),
   dateUpdated: ValidateJoi.createSchemaProp({
     date: noArguments,
-    label: viMessage.dateUpdated
+    label: viMessage['api.users.dateUpdated']
   }),
   dateCreated: ValidateJoi.createSchemaProp({
     date: noArguments,
-    label: viMessage.dateCreated
+    label: viMessage['api.users.dateCreated']
   })
 };
 
 export default {
   authenCreate: (req, res, next) => {
     console.log('validate authenCreate');
+    console.log(req.auth)
+    // id, affiliateWebsitesName, image, link, userCreatorsId, dateCreated, dateUpdated, status
     const userCreatorsId = req.auth.userId;
 
-    const {
-      photoInterviewsName,
-      files,
-      shortDescription,
-      description,
-      wardsId,
-      points,
-      urlSlug,
-      provincesIdId,
-      provincesId,
-      zone,
-      status
-    } = req.body;
+    const { affiliateWebsitesName, image, link, status } = req.body;
 
-    const photoInterviews = {
-      photoInterviewsName,
-      files,
-      shortDescription,
-      description,
-      wardsId,
-      points,
-      urlSlug,
-      provincesIdId,
-      provincesId,
-      zone,
+    const affiliateWebsites = {
+      affiliateWebsitesName,
+      image,
       status,
+      link,
       userCreatorsId
     };
 
     const SCHEMA = ValidateJoi.assignSchema(DEFAULT_SCHEMA, {
-      photoInterviewsName: {
+      affiliateWebsitesName: {
         max: 500,
         required: noArguments
       },
-      files: {
-        min: 1,
+      status: {
         required: noArguments
       },
-      status: {
+      image: {
+        required: noArguments
+      },
+      link: {
         required: noArguments
       }
     });
 
     // console.log('input: ', input);
-    ValidateJoi.validate(photoInterviews, SCHEMA)
+    ValidateJoi.validate(affiliateWebsites, SCHEMA)
       .then(data => {
         res.locals.body = data;
         next();
@@ -131,40 +87,26 @@ export default {
   authenUpdate: (req, res, next) => {
     console.log('validate authenUpdate');
 
-    const {
-      photoInterviewsName,
-      files,
-      shortDescription,
-      description,
-      wardsId,
-      points,
-      urlSlug,
-      provincesIdId,
-      provincesId,
-      zone,
-      status
-    } = req.body;
-    const photoInterviews = {
-      photoInterviewsName,
-      files,
-      shortDescription,
-      description,
-      wardsId,
-      points,
-      urlSlug,
-      provincesIdId,
-      provincesId,
-      zone,
-      status
-    };
+    const { affiliateWebsitesName, image, link, status, userCreatorsId } = req.body;
+    const affiliateWebsites = { affiliateWebsitesName, image, link, status, userCreatorsId };
 
     const SCHEMA = ValidateJoi.assignSchema(DEFAULT_SCHEMA, {
-      photoInterviewsName: {
-        max: 200
+      affiliateWebsitesName: {
+        max: 500,
+        required: noArguments
+      },
+      status: {
+        required: noArguments
+      },
+      image: {
+        required: noArguments
+      },
+      link: {
+        required: noArguments
       }
     });
 
-    ValidateJoi.validate(photoInterviews, SCHEMA)
+    ValidateJoi.validate(affiliateWebsites, SCHEMA)
       .then(data => {
         res.locals.body = data;
         next();
@@ -202,46 +144,14 @@ export default {
     res.locals.range = range ? JSON.parse(range) : [0, 49];
     res.locals.attributes = attributes;
     if (filter) {
-      const {
-        id,
-        photoInterviewsName,
-        files,
-        shortDescription,
-        description,
-        wardsId,
-        points,
-        urlSlug,
-        provincesIdId,
-        provincesId,
-        zone,
-        status,
-        userCreatorsId,
-        FromDate,
-        ToDate
-      } = JSON.parse(filter);
-      const photoInterviews = {
-        id,
-        photoInterviewsName,
-        files,
-        shortDescription,
-        description,
-        wardsId,
-        points,
-        urlSlug,
-        provincesIdId,
-        provincesId,
-        zone,
-        status,
-        userCreatorsId,
-        FromDate,
-        ToDate
-      };
+      const { id, affiliateWebsitesName, urlSlug, status, userCreatorsId, FromDate, ToDate } = JSON.parse(filter);
+      const affiliateWebsites = { id, affiliateWebsitesName, urlSlug, status, userCreatorsId, FromDate, ToDate };
 
-      console.log(photoInterviews);
+      console.log(affiliateWebsites);
       const SCHEMA = {
         id: ValidateJoi.createSchemaProp({
           string: noArguments,
-          label: viMessage['api.photoInterviews.id'],
+          label: viMessage['api.affiliateWebsites.id'],
           regex: regexPattern.listIds
         }),
         ...DEFAULT_SCHEMA,
@@ -261,7 +171,7 @@ export default {
       };
 
       // console.log('input: ', input);
-      ValidateJoi.validate(photoInterviews, SCHEMA)
+      ValidateJoi.validate(affiliateWebsites, SCHEMA)
         .then(data => {
           if (id) {
             ValidateJoi.transStringToArray(data, 'id');
