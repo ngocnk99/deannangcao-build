@@ -55,7 +55,8 @@ export default models => {
     mailsUsers,
     roomMails,
     newKindOfDisaster,
-    newGroups
+    newGroups,
+    questions
   } = models;
 
   // Users.hasMany(Roles, { foreignKey: 'UserId', as: 'RoleDetails' })
@@ -510,5 +511,10 @@ export default models => {
   news.belongsTo(newGroups, {
     foreignKey: 'newGroupsId',
     as: 'newGroups'
+  });
+
+  questions.belongsTo(users, {
+    foreignKey: 'answerUsersId',
+    as: 'answerUsers'
   });
 };

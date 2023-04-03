@@ -135,6 +135,7 @@ import botTypeOfTrackedObject from './vi-Vn/botTypeOfTrackedObject';
 import contentSocialsStatistic from './vi-Vn/contentSocialsStatistic';
 import newKindOfDisaster from './vi-Vn/newKindOfDisaster';
 import newGroups from './vi-Vn/newGroups';
+import questions from './vi-Vn/questions';
 
 export default {
   // thông tin chung//
@@ -569,5 +570,6 @@ export default {
   ...botTypeOfTrackedObject,
   ...contentSocialsStatistic,
   ...newKindOfDisaster,
-  ...newGroups
+  ...newGroups,
+  ...questions
 };
