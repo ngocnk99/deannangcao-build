@@ -3,8 +3,8 @@
   "version": "1.0.1",
   "description": "cms api for web",
   "scripts": {
-    "start": "node_modules/cross-env/dist/bin/cross-env.js NODE_ENV=production node dist/server.js",
-    "build": "node_modules/cross-env/dist/bin/cross-env.js NODE_ENV=production webpack --config webpack.config.production.js",
+    "start": "NODE_ENV=production node dist/server.js",
+    "build": "NODE_ENV=production webpack --config webpack.config.production.js",
     "dev": "nodemon --watch .env --watch src --exec babel-node src --source-maps",
     "lint": "eslint src test",
     "lint:fix": "eslint src test --fix",
