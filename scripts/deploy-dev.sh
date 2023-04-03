@@ -11,15 +11,15 @@ fi
 BUILD_NUMBER=$1
 BUILD_TAG=${2:-dev} #It should be dev, staging or prod. Default to dev.
 
-DOCKER_IMAGE=docker.vgasoft.vn/vndms-content-api-"$BUILD_TAG":"$BUILD_NUMBER"
-ENV_FILE=/data/env/api.vndmscontent/.env.production # Default to dev environment
+DOCKER_IMAGE=docker.vgasoft.vn/deannangcaonhanthuc-api-"$BUILD_TAG":"$BUILD_NUMBER"
+ENV_FILE=/data/env/apideannangcaonhanthuc/.env.production # Default to dev environment
 ENV_FILE_CONTAINER=/data/env/vndmsearthexplorersupload/container # Default to dev environment
-CONTAINER_NAME=vndms-content-api-"$BUILD_TAG"
+CONTAINER_NAME=deannangcaonhanthuc-api-"$BUILD_TAG"
 
 if [ "$BUILD_TAG" = "main" ]; then
-  ENV_FILE=/data/envproduction/api.vndmscontent/.env.production # Production environment file
+  ENV_FILE=/data/envproduction/apideannangcaonhanthuc/.env.production # Production environment file
 elif [ "$BUILD_TAG" = "test" ]; then
-  ENV_FILE=/data/env/api.vndmscontent/.env.production # Staging environment file
+  ENV_FILE=/data/env/apideannangcaonhanthuc/.env.production # Staging environment file
 fi
 
 PORT=$(awk 'sub(/^[ \t]*WEB_PORT=/,""){print $1}' $ENV_FILE)

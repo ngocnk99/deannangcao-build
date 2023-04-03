@@ -134,8 +134,15 @@ import botTypeOfPosts from './vi-Vn/botTypeOfPosts';
 import botTypeOfTrackedObject from './vi-Vn/botTypeOfTrackedObject';
 import contentSocialsStatistic from './vi-Vn/contentSocialsStatistic';
 import newKindOfDisaster from './vi-Vn/newKindOfDisaster';
+import newGroups from './vi-Vn/newGroups';
+import questions from './vi-Vn/questions';
+import photoInterviews from './vi-Vn/photoInterviews';
+import lecturers from './vi-Vn/lecturers';
+
 export default {
   // thông tin chung//
+  userCreatorsId: 'Id nguoi tao',
+
   page: 'Trang hiện tại',
   perPage: 'Tổng dữ trên trang',
   isDelete: 'Trạng thái xóa',
@@ -564,5 +571,9 @@ export default {
   ...botTypeOfPosts,
   ...botTypeOfTrackedObject,
   ...contentSocialsStatistic,
-  ...newKindOfDisaster
+  ...newKindOfDisaster,
+  ...newGroups,
+  ...questions,
+  ...lecturers,
+  ...photoInterviews
 };

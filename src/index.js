@@ -1,6 +1,6 @@
 import './env';
 import './db';
-import MongoDb from './mongoDb';
+// import MongoDb from './mongoDb';
 import fs from 'fs-extra';
 import cors from 'cors';
 import path from 'path';
@@ -26,7 +26,6 @@ import authRoutes from './routes/authRoutes';
 // import exampleRoutes from './routes/exampleRoutes';
 
 // import CONFIG from './config';
-import io from './socketServer';
 
 // import moment from 'moment';
 // import * as Sentry from '@sentry/node';
@@ -186,8 +185,6 @@ authRoutes(app);
 
 // import { mongo } from 'mongoose';
 // exampleRoutes(app);
-
-new MongoDb().init();
 
 // API Routes
 app.use('/api', routes);

@@ -53,6 +53,9 @@ import botTypeOfTrackedObjectRoutes from './routes/botTypeOfTrackedObjectRoutes'
 import contentSocialsStatisticRoutes from './routes/contentSocialsStatisticRoutes';
 import witaiRoutes from './routes/witaiRoutes';
 import newKindOfDisasterRoutes from './routes/newKindOfDisasterRoutes';
+import newGroupsRoutes from './routes/newGroupsRoutes';
+import questionsRoutes from './routes/questionsRoutes';
+
 /**
  * Contains all API routes for the application.
  */
@@ -126,4 +129,7 @@ router.use('/c/botTypeOfTrackedObject', botTypeOfTrackedObjectRoutes);
 router.use('/c/contentSocialsStatistic', contentSocialsStatisticRoutes);
 router.use('/c/witai', witaiRoutes);
 router.use('/c/newKindOfDisaster', newKindOfDisasterRoutes);
+router.use('/c/newGroups', newGroupsRoutes);
+router.use('/c/questions', questionsRoutes);
+
 export default router;

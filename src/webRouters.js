@@ -2,7 +2,7 @@ import { Router } from 'express';
 
 import swaggerSpec from './utils/swagger';
 
-import currentUserRoutes from './routerWeb/currentUserRoutes'
+import currentUserRoutes from './routerWeb/currentUserRoutes';
 import usersRoutes from './routerWeb/usersRoutes';
 import menusRoutes from './routerWeb/menusRoutes';
 import userGroupsRoutes from './routerWeb/userGroupsRoutes';
@@ -40,6 +40,8 @@ import mailsRoutes from './routerWeb/mailsRoutes';
 import newsRoutes from './routerWeb/newsRoutes';
 import newspapersRoutes from './routerWeb/newspapersRoutes';
 import contentReviewsRoutes from './routerWeb/contentReviewsRoutes';
+import newGroupsRoutes from './routerWeb/newGroupsRoutes';
+import questionsRoutes from './routerWeb/questionsRoutes';
 
 /**
  * Contains all API routes for the application.
@@ -70,22 +72,22 @@ router.use('/c/userGroups', userGroupsRoutes);
 router.use('/c/districts', districtsRoutes);
 router.use('/c/provinces', provincesRoutes);
 router.use('/c/wards', wardsRoutes);
-router.use('/c/userGroupRoles',userGroupRolesRoutes)
+router.use('/c/userGroupRoles', userGroupRolesRoutes);
 router.use('/c/areas', areasRoutes);
 router.use('/c/disasterGroups', disasterGroupsRoutes);
-router.use('/c/disasters',disastersRoutes);
-router.use('/c/explorers',explorersRoutes);
-router.use('/c/sendMail',sendMailRoutes);
-router.use('/c/token',tokenRoutes);
-router.use('/c/systemsConfigs',systemsConfigsRoutes);
-router.use('/c/crawlerdatagis',crawlerdatagis);
-router.use('/c/requestDownloads',requestDownloadsRoutes);
-router.use('/c/riverBasins',riverBasinsRoutes);
-router.use('/c/report',reportRoutes);
-router.use('/c/logSystems',logSystemsRoutes);
-router.use('/find/vndmsExplorers',vndmsExplorersRoutes);
-router.use('/c/explorerGroups',explorerGroupsRoutes);
-router.use('/c/maps',mapsRoutes);
+router.use('/c/disasters', disastersRoutes);
+router.use('/c/explorers', explorersRoutes);
+router.use('/c/sendMail', sendMailRoutes);
+router.use('/c/token', tokenRoutes);
+router.use('/c/systemsConfigs', systemsConfigsRoutes);
+router.use('/c/crawlerdatagis', crawlerdatagis);
+router.use('/c/requestDownloads', requestDownloadsRoutes);
+router.use('/c/riverBasins', riverBasinsRoutes);
+router.use('/c/report', reportRoutes);
+router.use('/c/logSystems', logSystemsRoutes);
+router.use('/find/vndmsExplorers', vndmsExplorersRoutes);
+router.use('/c/explorerGroups', explorerGroupsRoutes);
+router.use('/c/maps', mapsRoutes);
 router.use('/c/producers', producersRoutes);
 router.use('/c/targetAudiences', targetAudiencesRoutes);
 router.use('/c/communicationProductsGroups', communicationProductsGroupsRoutes);
@@ -96,10 +98,11 @@ router.use('/c/contents', contentsRoutes);
 router.use('/c/socials', socialsRoutes);
 router.use('/c/socialChannels', socialChannelsRoutes);
 router.use('/c/contentSocials', contentSocialsRoutes);
-router.use('/c/youtube',youtubeRoutes);
+router.use('/c/youtube', youtubeRoutes);
 router.use('/c/mails', mailsRoutes);
 router.use('/c/news', newsRoutes);
 router.use('/c/newspapers', newspapersRoutes);
 router.use('/c/contentReviews', contentReviewsRoutes);
-
+router.use('/c/newGroups', newGroupsRoutes);
+router.use('/c/questions', questionsRoutes);
 export default router;

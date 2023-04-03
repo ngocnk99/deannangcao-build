@@ -33,17 +33,18 @@ module.exports = function(sequelize, DataTypes) {
       },
       newsAuthor: {
         type: DataTypes.STRING(300),
-        allowNull: false,
+        allowNull: true,
         field: 'newsAuthor'
       },
-      newsSource: {
-        type: DataTypes.TEXT,
-        allowNull: false,
-        field: 'newsSource'
-      },
+      // newsSource: {
+      //   type: DataTypes.TEXT,
+      //   allowNull: true,
+      //   field: 'newsSource'
+      // },
       status: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
+        defaultValue: 1,
         field: 'status'
       },
       image: {
@@ -67,6 +68,11 @@ module.exports = function(sequelize, DataTypes) {
         allowNull: true,
         field: 'newspapersId'
       },
+      newGroupsId: {
+        type: DataTypes.BIGINT,
+        allowNull: false,
+        field: 'newGroupsId'
+      },
       userApprovedId: {
         type: DataTypes.BIGINT,
         allowNull: true,
@@ -83,13 +89,13 @@ module.exports = function(sequelize, DataTypes) {
         allowNull: true,
         defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
         field: 'dateUpdated'
-      },
-      manualUpdate: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-        defaultValue: 0,
-        field: 'manualUpdate'
       }
+      // manualUpdate: {
+      //   type: DataTypes.INTEGER,
+      //   allowNull: true,
+      //   defaultValue: 0,
+      //   field: 'manualUpdate'
+      // }
     },
     {
       tableName: 'news',

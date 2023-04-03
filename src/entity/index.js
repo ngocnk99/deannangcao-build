@@ -83,7 +83,11 @@ const modules = [
   require('./chatMessages'),
   require('./mailsUsers'),
   require('./roomMails'),
-  require('./newKindOfDisaster')
+  require('./newKindOfDisaster'),
+  require('./newGroups'),
+  require('./questions'),
+  require('./lecturers'),
+  require('./photoInterviews')
 ];
 
 // Initialize models
