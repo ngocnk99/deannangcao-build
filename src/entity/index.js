@@ -85,7 +85,9 @@ const modules = [
   require('./roomMails'),
   require('./newKindOfDisaster'),
   require('./newGroups'),
-  require('./questions')
+  require('./questions'),
+  require('./lecturers'),
+  require('./photoInterviews')
 ];
 
 // Initialize models

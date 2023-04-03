@@ -56,7 +56,9 @@ export default models => {
     roomMails,
     newKindOfDisaster,
     newGroups,
-    questions
+    questions,
+    photoInterviews,
+    lecturers
   } = models;
 
   // Users.hasMany(Roles, { foreignKey: 'UserId', as: 'RoleDetails' })
@@ -516,5 +518,32 @@ export default models => {
   questions.belongsTo(users, {
     foreignKey: 'answerUsersId',
     as: 'answerUsers'
+  });
+
+  photoInterviews.belongsTo(users, {
+    foreignKey: 'userCreatorsId',
+    as: 'userCreators'
+  });
+  photoInterviews.belongsTo(wards, {
+    foreignKey: 'wardsId',
+    as: 'wards'
+  });
+  photoInterviews.belongsTo(districts, {
+    foreignKey: 'districtsId',
+    as: 'districts'
+  });
+
+  photoInterviews.belongsTo(provinces, {
+    foreignKey: 'provincesId',
+    as: 'provinces'
+  });
+  lecturers.belongsTo(users, {
+    foreignKey: 'userCreatorsId',
+    as: 'userCreators'
+  });
+
+  lecturers.belongsTo(wards, {
+    foreignKey: 'wardsId',
+    as: 'wards'
   });
 };

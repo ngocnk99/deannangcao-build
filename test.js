@@ -1,3 +1,5 @@
-const a = 'chayrungchayrung';
-const b = a.split(':');
-console.log('b', b);
+const a = { 1: 2 };
+
+a.merger({ B: c });
+
+a = { 1: 2, b: c };

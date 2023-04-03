@@ -136,6 +136,8 @@ import contentSocialsStatistic from './vi-Vn/contentSocialsStatistic';
 import newKindOfDisaster from './vi-Vn/newKindOfDisaster';
 import newGroups from './vi-Vn/newGroups';
 import questions from './vi-Vn/questions';
+import photoInterviews from './vi-Vn/photoInterviews';
+import lecturers from './vi-Vn/lecturers';
 
 export default {
   // thông tin chung//
@@ -571,5 +573,7 @@ export default {
   ...contentSocialsStatistic,
   ...newKindOfDisaster,
   ...newGroups,
-  ...questions
+  ...questions,
+  ...lecturers,
+  ...photoInterviews
 };
