@@ -1,7 +1,6 @@
 import r from 'rethinkdb';
 import CONFIG from '../config';
 import _ from 'lodash';
-import { profile } from 'winston';
 // eslint-disable-next-line require-jsdoc
 export const getNotifcations =  ({ usersId, range }) => new Promise(async resolve => {
     let finalResult;
@@ -13,7 +12,7 @@ export const getNotifcations =  ({ usersId, range }) => new Promise(async resolv
         port: CONFIG.RETHINKDB_PORT,
         db: CONFIG.RETHINKDB_DB
       });
-      
+
       console.log("range chat = ",range)
 
       let result= await r
@@ -27,16 +26,16 @@ export const getNotifcations =  ({ usersId, range }) => new Promise(async resolv
         // .zip()
         .group('conversationId')
         .ungroup()
-      
+
         .orderBy(r.desc('time'))
         .run(connection, function(err,result) {
           if (err) {
             console.log('rethinkDB failed %s:%s\n%s', err.name, err.msg, err.message);
           }
           // console.log("range chat result=",result);
-   
+
       });
-     
+
       let filterMessage = [];
       const conversationGroup = [];
 
@@ -46,7 +45,7 @@ export const getNotifcations =  ({ usersId, range }) => new Promise(async resolv
         if (err) {
           console.log('rethinkDB failed %s:%s\n%s', err.name, err.msg, err.message);
         }
-      
+
         cursor.each(function(error, item) {
           conversationGroup.push(item);
         })
@@ -56,22 +55,22 @@ export const getNotifcations =  ({ usersId, range }) => new Promise(async resolv
 
           await result.forEach(async (item) => {
             const userMessages = [];
-  
+
             userMessages.push(item.reduction);
             const groupInfor = _.filter(conversationGroup,{id:item.group});
 
              console.log("groupInfor=",groupInfor);
               userMessages.forEach( (item) => {
                   let totalUnread = 0;
-  
+
                 item = _.orderBy(item, ['time'], ['desc']);
-  
+
                 item.forEach(cv => {
-                  
+
                   let arrayReadUser =  _.filter(groupInfor[0].read,["id",usersId.toString()]);
-  
+
                   let timeReadUser;
-      
+
                   if(_.size(arrayReadUser) >0)
                   {
                     timeReadUser = arrayReadUser[0].time;
@@ -85,45 +84,45 @@ export const getNotifcations =  ({ usersId, range }) => new Promise(async resolv
                     totalUnread += 1;
                   }
                 });
-                
+
                 item = { ...item[0],..._.omit(groupInfor[0],["id","time","status"]), totalUnread };
                 // console.log("item====",item)
                 filterMessage.push(item);
-  
+
               });
               filterMessage = _.orderBy(filterMessage, 'time', ['desc']);
-  
+
               const end = perPage > filterMessage.length ? filterMessage.length : perPage;
-  
+
               filterMessage = filterMessage.slice(range[0], end);
           })
 
-       
+
       }
-    
+
       // console.log("filterMessage*************",filterMessage);
       let totalUnread = 0;
-      
+
       if(filterMessage)
       {
         filterMessage.forEach(cv => {
 
-          
+
 
           if(cv.totalUnread>0)
           {
             totalUnread += 1;
           }
-      
+
         });
       }
-        
+
 
         // console.log("filterMessage===",filterMessage)
         finalResult = { list: filterMessage,channel: 'chat', totalUnread: totalUnread };
-   
+
       // console.log("finalResult chat ===",finalResult)
-      resolve(finalResult) 
+      resolve(finalResult)
 })
 ;
 
@@ -194,7 +193,7 @@ export const getNotifcationsEmail = async ({ usersId, range }) => {
 
         //   return r;
         // }, []);
-  
+
         let totalUnread = 0;
 
         if (filterMessage && Array.isArray(filterMessage)) {
@@ -206,10 +205,10 @@ export const getNotifcationsEmail = async ({ usersId, range }) => {
           });
         }
         finalResult={list: filterMessage,channel: 'email', totalUnread: totalUnread };
-     
+
       });
       // console.log("finalResult email===",finalResult)
-      
+
       return finalResult;
   } catch (e) {
     console.log('catch getnotify', e);
@@ -256,7 +255,7 @@ export const getMessages = async ({  usersId, range }) => new Promise(async reso
         if (err) {
           console.log('rethinkDB failed %s:%s\n%s', err.name, err.msg, err.message);
         }
-      
+
         cursor.each(function(error, item) {
           conversationGroup.push(item);
         })
@@ -266,22 +265,22 @@ export const getMessages = async ({  usersId, range }) => new Promise(async reso
 
           await result.forEach(async (item) => {
             const userMessages = [];
-  
+
             userMessages.push(item.reduction);
             const groupInfor = _.filter(conversationGroup,{id:item.group});
 
              //   console.log("groupInfor=",groupInfor);
               userMessages.forEach( (item) => {
                   let totalUnread = 0;
-  
+
                 item = _.orderBy(item, ['time'], ['desc']);
-  
+
                 item.forEach(cv => {
-                  
+
                   let arrayReadUser =  _.filter(groupInfor[0].read,["id",usersId.toString()]);
-  
+
                   let timeReadUser;
-      
+
                   if(_.size(arrayReadUser) >0)
                   {
                     timeReadUser = arrayReadUser[0].time;
@@ -295,25 +294,25 @@ export const getMessages = async ({  usersId, range }) => new Promise(async reso
                     totalUnread += 1;
                   }
                 });
-                
+
                 item = { ...item[0],..._.omit(groupInfor[0],["id","time","status"]), totalUnread };
                 // console.log("item====",item)
                 filterMessage.push(item);
-  
+
               });
               filterMessage = _.orderBy(filterMessage, 'time', ['desc']);
-  
+
               const end = perPage > filterMessage.length ? filterMessage.length : perPage;
-  
+
               filterMessage = filterMessage.slice(range[0], end);
           })
 
-       
+
       }
-    
+
       // console.log("filterMessage*************",filterMessage);
       let totalUnread = 0;
-      
+
       if(filterMessage)
       {
         filterMessage.forEach(cv => {
@@ -322,7 +321,7 @@ export const getMessages = async ({  usersId, range }) => new Promise(async reso
           {
             totalUnread += 1;
           }
-      
+
         });
       }
 
@@ -371,7 +370,7 @@ export const getMessagesByConversationAndUsersId = async ({ usersId,conversation
         if (err) {
           console.log('rethinkDB failed %s:%s\n%s', err.name, err.msg, err.message);
         }
-      
+
         cursor.each(function(error, item) {
           conversationGroup.push(item);
         })
@@ -382,22 +381,22 @@ export const getMessagesByConversationAndUsersId = async ({ usersId,conversation
 
           await result.forEach(async (item) => {
             const userMessages = [];
-  
+
             userMessages.push(item.reduction);
             const groupInfor = _.filter(conversationGroup,{id:item.group});
 
               // console.log("groupInfor=",groupInfor);
               userMessages.forEach( (item) => {
                   let totalUnread = 0;
-  
+
                 item = _.orderBy(item, ['time'], ['desc']);
-  
+
                 item.forEach(cv => {
-                  
+
                   let arrayReadUser =  _.filter(groupInfor[0].read,["id",usersId.toString()]);
-  
+
                   let timeReadUser;
-      
+
                   if(_.size(arrayReadUser) >0)
                   {
                     timeReadUser = arrayReadUser[0].time;
@@ -411,39 +410,39 @@ export const getMessagesByConversationAndUsersId = async ({ usersId,conversation
                     totalUnread += 1;
                   }
                 });
-                
+
                 item = { ...item[0],..._.omit(groupInfor[0],["id","time","status"]), totalUnread };
                 // console.log("item====",item)
                 filterMessage.push(item);
-  
+
               });
               filterMessage = _.orderBy(filterMessage, 'time', ['desc']);
-  
+
               const end = perPage > filterMessage.length ? filterMessage.length : perPage;
-  
+
               filterMessage = filterMessage.slice(range[0], end);
           })
 
-       
+
       }
-    
+
       // console.log("filterMessage*************",filterMessage);
       let totalUnread = 0;
-      
+
       if(filterMessage)
       {
         filterMessage.forEach(cv => {
 
-          
+
 
           if(cv.totalUnread>0)
           {
             totalUnread += 1;
           }
-      
+
         });
       }
-        
+
       finalResult = { list: filterMessage,channel: 'chat', totalUnread: totalUnread };
 
     // console.log("finalResult==",finalResult)
@@ -454,7 +453,7 @@ export const getEmail = async ({  usersId, range,filter }) => {
   let finalResult;
   let totalRow;
    console.log("filter===",filter,"===usersId=",usersId,"===range=",range);
- 
+
  let { mailTitle, receiversId,senderId,FromDate,ToDate } = filter || {};
 
   range = (typeof range === 'string') ? JSON.parse(range) : range ? range : [0, 10];
@@ -485,7 +484,7 @@ export const getEmail = async ({  usersId, range,filter }) => {
     ;
     }
 
- 
+
 
   await r
     .table('mails')
@@ -498,7 +497,7 @@ export const getEmail = async ({  usersId, range,filter }) => {
       }
       const userMessages = [];
       let filterMessage = [];
-     
+
       if (result && Array.isArray(result)) {
         result.forEach(item => {
           userMessages.push(item.reduction);
@@ -529,7 +528,7 @@ export const getEmail = async ({  usersId, range,filter }) => {
           item = { ...item[0], totalUnread };
           filterMessage.push(item);
         });
-        
+
         filterMessage = _.orderBy(filterMessage, 'mailSendingDate', ['desc']);
         console.log("perPage===",perPage)
         const end = perPage > filterMessage.length ? filterMessage.length : perPage;
@@ -554,7 +553,7 @@ export const getEmail = async ({  usersId, range,filter }) => {
       if (filterMessage && Array.isArray(filterMessage)) {
         filterMessage.forEach(item => {
           totalUnread += item.totalUnread || 0
-        
+
         });
       }
       finalResult = {
@@ -567,7 +566,7 @@ export const getEmail = async ({  usersId, range,filter }) => {
                     };
       });
     // console.log("finalResult==",finalResult)
-  
+
     return finalResult;
 };
 
@@ -577,7 +576,7 @@ export const getSendedEmail = async ({  usersId, range,filter }) => {
   let totalRow;
  // console.log(usersId, range);
  console.log("filter===",filter,"===usersId=",usersId,"===range=",range);
- 
+
  let { mailTitle, receiversId,senderId,FromDate,ToDate } = filter || {};
 
   range = (typeof range === 'string') ? JSON.parse(range) : range ? range : [0, 10];
@@ -603,7 +602,7 @@ export const getSendedEmail = async ({  usersId, range,filter }) => {
                   .and(
                     user("mailSendingDate").gt(FromDate || '1970-01-01 00:00:00')
                    .and(user("mailSendingDate").lt(ToDate || '3000-01-01 00:00:00'))
-              
+
                   )
                 ;
       })
@@ -615,7 +614,7 @@ export const getSendedEmail = async ({  usersId, range,filter }) => {
       }
       const userMessages = [];
       let filterMessage = [];
-     
+
       if (result && Array.isArray(result)) {
         result.forEach(item => {
           userMessages.push(item.reduction);
@@ -634,7 +633,7 @@ export const getSendedEmail = async ({  usersId, range,filter }) => {
           item = { ...item[0], totalUnread };
           filterMessage.push(item);
         });
-        
+
         filterMessage = _.orderBy(filterMessage, 'mailSendingDate', ['desc']);
         console.log("perPage===",perPage)
         const end = perPage > filterMessage.length ? filterMessage.length : perPage;
@@ -649,7 +648,7 @@ export const getSendedEmail = async ({  usersId, range,filter }) => {
 
       filterMessage.forEach(item => {
         totalUnread += item.totalUnread || 0
-       
+
       });
       finalResult = {
                       list:filterMessage,channel:'email',totalUnread:totalUnread
@@ -661,7 +660,7 @@ export const getSendedEmail = async ({  usersId, range,filter }) => {
                     };
       });
     // console.log("finalResult==",finalResult)
-  
+
     return finalResult;
 };
 
@@ -682,7 +681,7 @@ export const getMessagesFromUserConversations = async ({ conversationId,usersId,
       port: CONFIG.RETHINKDB_PORT,
       db: CONFIG.RETHINKDB_DB
     });
-  
+
     let result = await r
       .table('conversations')
       .filter(
@@ -699,7 +698,7 @@ export const getMessagesFromUserConversations = async ({ conversationId,usersId,
         if (err) {
           console.log('DB---->Insert failed] %s:%s\n%s', err.name, err.msg, err.message);
         }
-        
+
         // console.log(JSON.stringify(result, null, 2));
         // result.map(item => {
         //   return {
@@ -737,7 +736,7 @@ export const getMessagesFromUserConversations = async ({ conversationId,usersId,
               // console.log("arrayReadUser----",arrayReadUser)
 
               let timeReadUser;
-              
+
               if(_.size(arrayReadUser) >0)
               {
                 timeReadUser = arrayReadUser[0].time;
@@ -750,7 +749,7 @@ export const getMessagesFromUserConversations = async ({ conversationId,usersId,
               {
                 totalUnread += 1;
               }
-              
+
               item = { ...item,..._.omit(groupInfor,["id","time","status"]), totalUnread };
               // console.log("item====",item)
               filterMessage.push(item);
@@ -762,24 +761,24 @@ export const getMessagesFromUserConversations = async ({ conversationId,usersId,
         filterMessage = filterMessage.slice(range[0], end);
       }
 
-    
+
       // console.log("filterMessage*************",filterMessage);
       let totalUnread = 0;
-      
+
       if(filterMessage)
       {
         filterMessage.forEach(cv => {
 
-          
+
 
           if(cv.totalUnread>0)
           {
             totalUnread += 1;
           }
-      
+
         });
       }
-        
+
       finnalyResult = { list: filterMessage,channel: 'chat', totalUnread: totalUnread };
   } catch (e) {
     console.log('getMessagesFromUser, ', e);
@@ -791,7 +790,7 @@ export const getMessagesFromUserConversations = async ({ conversationId,usersId,
 export const getEmailFromUserConversations = async ({ conversationsId,usersId, range }) => {
   let output;
   let totalRow;
-  
+
   console.log('getMessagesFromUser', { conversationsId,usersId, range });
   try {
     // const id = conversationId.split('_');
@@ -814,7 +813,7 @@ export const getEmailFromUserConversations = async ({ conversationsId,usersId, r
             return receiver("id").eq(usersId.toString())
           })).and( user("conversationsId").eq(conversationsId.toString())));
           }
-      
+
       )
       .orderBy(r.desc('mailSendingDate'))
       .skip(page)

@@ -3,7 +3,6 @@ import winston, { format } from 'winston';
 const { combine, timestamp, label, printf } = format;
 import CONFIG from '../config';
 
-import 'winston-daily-rotate-file';
 import moment from 'moment';
 
 // Use LOG_DIR from env
@@ -11,8 +10,10 @@ const LOG_DIR = process.env.LOG_DIR || 'logs';
 const LOG_LEVEL = process.env.LOG_LEVEL || 'debug';
 const tz = 'ASIA/Ho_Chi_Minh';
 const myFormat = printf(({ level, message, label, timestamp }) => {
-  timestamp = moment(timestamp).tz(tz).format('YYYY-MM-DD HH:mm:ss');
-  return `[${label}] ${level} ${timestamp} ${typeof message === 'object' ? JSON.stringify(message) : message } `;
+  timestamp = moment(timestamp)
+    .tz(tz)
+    .format('YYYY-MM-DD HH:mm:ss');
+  return `[${label}] ${level} ${timestamp} ${typeof message === 'object' ? JSON.stringify(message) : message} `;
 });
 
 // Create log directory if it does not exist
@@ -21,11 +22,12 @@ if (!fs.existsSync(LOG_DIR)) {
 }
 
 // Ignore log messages if they have { private: true }
-const ignorePrivate = format((info/* , opts */) => {
+const ignorePrivate = format((info /* , opts */) => {
   // console.log("info: %o \n opts: %o", info, opts)
-  if (info.private) { return false; }
-  if (CONFIG.LOGGING_DATA_OUTPUT === 'false')
-    delete info.dataOutput;
+  if (info.private) {
+    return false;
+  }
+  if (CONFIG.LOGGING_DATA_OUTPUT === 'false') delete info.dataOutput;
 
   return info;
 });
@@ -34,21 +36,18 @@ const ignorePrivate = format((info/* , opts */) => {
  *
  */
 const createTransports = () => {
-  const arr = [
+  const arr = [];
 
-  ];
-
-  if(CONFIG.LOGGING_CONSOLE !== 'false') {
+  if (CONFIG.LOGGING_CONSOLE !== 'false') {
     arr.push(
       new winston.transports.Console({
         format: combine(format.colorize(), ignorePrivate(), format.simple()),
         level: 'info'
       })
     );
-
   }
 
-  if(CONFIG.LOGGING_FILE !== 'false') {
+  if (CONFIG.LOGGING_FILE !== 'false') {
     arr.push(
       // new winston.transports.DailyRotateFile({
       //   format: combine(format.timestamp(), ignorePrivate(), format.json()),
@@ -63,7 +62,8 @@ const createTransports = () => {
         format: combine(
           //label({ label: '!' }),
           timestamp(),
-          myFormat),
+          myFormat
+        ),
         maxFiles: '1d',
         maxSize: '3m',
         level: 'warn',
@@ -75,7 +75,8 @@ const createTransports = () => {
         format: combine(
           //label({ label: 'x' }),
           timestamp(),
-          myFormat),
+          myFormat
+        ),
         maxFiles: '1d',
         maxSize: '3m',
         level: 'error',
@@ -84,11 +85,10 @@ const createTransports = () => {
         filename: '%DATE%-error-log.txt'
       })
     );
-
   }
 
   return arr;
-}
+};
 
 /**
  * Create a new winston logger.
@@ -109,29 +109,29 @@ const logger = winston.createLogger({
     configDelete: 11,
     dns: 12,
     login: 13,
-    debug: 14,
+    debug: 14
   },
 
-    transports: createTransports()
-    // transports: [
-    // new winston.transports.Console({
-    //   format: format.combine(format.colorize(), ignorePrivate(), format.simple()),
-    //   level: 'info'
-    // }),
-    // new winston.transports.Console({
-    //   format: format.combine(format.colorize(), ignorePrivate(), format.simple()),
-    //   level: 'error'
-    // }),
-    // new winston.transports.DailyRotateFile({
-    //   format: format.combine(format.timestamp(), ignorePrivate(), format.json()),
-    //   // maxFiles: '1d',
-    //   maxSize: '3m',
-    //   level: LOG_LEVEL,
-    //   dirname: LOG_DIR,
-    //   datePattern: 'YYYY-MM-DD',
-    //   filename: '%DATE%-log.json'
-    // })
-    // ]
+  transports: createTransports()
+  // transports: [
+  // new winston.transports.Console({
+  //   format: format.combine(format.colorize(), ignorePrivate(), format.simple()),
+  //   level: 'info'
+  // }),
+  // new winston.transports.Console({
+  //   format: format.combine(format.colorize(), ignorePrivate(), format.simple()),
+  //   level: 'error'
+  // }),
+  // new winston.transports.DailyRotateFile({
+  //   format: format.combine(format.timestamp(), ignorePrivate(), format.json()),
+  //   // maxFiles: '1d',
+  //   maxSize: '3m',
+  //   level: LOG_LEVEL,
+  //   dirname: LOG_DIR,
+  //   datePattern: 'YYYY-MM-DD',
+  //   filename: '%DATE%-log.json'
+  // })
+  // ]
 });
 
 const colors = {
@@ -153,7 +153,6 @@ const colors = {
 };
 
 winston.addColors(colors);
-
 
 export const logStream = {
   /**
