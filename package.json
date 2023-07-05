@@ -112,9 +112,6 @@
     "tempfile": "^3.0.0",
     "uuid": "^3.3.2",
     "validator": "^10.11.0",
-    "winston": "^3.2.1",
-    "winston-daily-rotate-file": "^4.2.1",
-    "workerpool": "^6.0.0",
     "yarn": "^1.22.10"
   },
   "devDependencies": {
@@ -155,7 +152,7 @@
     "webpack-node-externals": "^1.7.2"
   },
   "engines": {
-    "node": ">= 8.9.0",
+    "node": "14.x",
     "npm": ">= 5.5.1"
   }
 }
